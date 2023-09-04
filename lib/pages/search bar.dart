@@ -14,18 +14,18 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
     return AnimatedContainer(
       curve: Curves.bounceIn,
       duration: Duration(milliseconds: 300),
-      width: _isSearching ? 370.0 : 48,
+      width: _isSearching ? 365.0 : 48,
       height: 47.0,
       alignment: _isSearching ? Alignment.centerLeft : Alignment.centerRight,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(80.0), // Make it a complete circle
-        color: Color.fromARGB(255, 143, 178, 252),
+        borderRadius: BorderRadius.circular(80.0), 
+        color: _isSearching? Color.fromARGB(255, 43, 56, 129):Color.fromARGB(255, 39, 43, 110),
       ),
       child: Row(
         children: <Widget>[
           IconButton(
             alignment: Alignment.center,
-            icon: Icon(_isSearching ? Icons.close : Icons.search,size: 25,),
+            icon: Icon(_isSearching ? Icons.close : Icons.search,size: 25,color: Color.fromARGB(255, 204, 202, 202),),
             onPressed: () {
               setState(() {
                 _isSearching = !_isSearching;
@@ -40,7 +40,7 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
                 ? TextField(
                     controller: _controller,
                     decoration: InputDecoration(
-                      hintText: 'Search...',
+                      hintText: 'Search...',hintStyle: TextStyle(color: Color.fromARGB(255, 204, 202, 202)),
                       border: InputBorder.none,
                     ),
                   )
