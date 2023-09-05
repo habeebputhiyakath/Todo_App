@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todolist/pages/search%20bar.dart';
 
 import 'drawer.dart';
+import 'todolist.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -12,6 +13,17 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   bool isChecked = false;
+  List todolist = [
+    ['take a showe', false],
+    ['do escersise', false],
+    ['Meditate', false],
+  ];
+  void checkBoxchanged(bool? value, int index) {
+    setState(() {
+      todolist[index][1]=!todolist[index][1];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,10 +70,7 @@ class _HomepageState extends State<Homepage> {
                 ),
                 child: Stack(
                   children: [
-                    Positioned(
-                      left: 20,
-                      top: 10,
-                      child: AnimatedSearchBar()),
+                    Positioned(left: 20, top: 10, child: AnimatedSearchBar()),
                     Positioned(
                         top: 65,
                         left: 20,
@@ -138,10 +147,15 @@ class _HomepageState extends State<Homepage> {
             ),
           ),
           Expanded(
-            child: ListView(
-              children: [
-                LIstitemsCount('List iem 1'),
-              ],
+            child: ListView.builder(
+              itemCount: todolist.length,
+              itemBuilder: (context, index) {
+                return toDolist(
+                  taskName: todolist[index][0],
+                  tasComplete: todolist[index][1],
+                  onChanged: (value) => checkBoxchanged(value, index),
+                );
+              },
             ),
           )
         ],
@@ -175,41 +189,6 @@ class _HomepageState extends State<Homepage> {
           decoration: BoxDecoration(
               color: color, borderRadius: BorderRadius.circular(20)),
         ));
-  }
-
-  GestureDetector LIstitemsCount(String text) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          isChecked = !isChecked;
-        });
-      },
-      child: Padding(
-          padding: EdgeInsets.only(left: 8, right: 8),
-          child: Card(
-            color: Color.fromARGB(255, 240, 239, 239),
-            child: ListTile(
-              leading: Checkbox(
-                value: isChecked,
-                onChanged: (value) {
-                  setState(() {
-                    isChecked = value!;
-                  });
-                },
-                activeColor: Colors.green,
-              ),
-              title: Text('List item text'),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  GestureDetector(child: Icon(Icons.delete)),
-                  SizedBox(width: 8),
-                  GestureDetector(child: Icon(Icons.edit)),
-                ],
-              ),
-            ),
-          )),
-    );
   }
 
   Positioned _positionedContainer(double top, double left) {
