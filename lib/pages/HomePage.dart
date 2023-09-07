@@ -5,7 +5,9 @@ import 'drawer.dart';
 import 'todolist.dart';
 
 class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+  const Homepage({
+    super.key,
+  });
 
   @override
   State<Homepage> createState() => _HomepageState();
@@ -13,14 +15,11 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   bool isChecked = false;
-  List todolist = [
-    ['take a showe', false],
-    ['do escersise', false],
-    ['Meditate', false],
-  ];
+  List todolist = [];
+  final dialogueController = TextEditingController();
   void checkBoxchanged(bool? value, int index) {
     setState(() {
-      todolist[index][1]=!todolist[index][1];
+      todolist[index][1] = !todolist[index][1];
     });
   }
 
@@ -28,7 +27,8 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 45, 49, 116),
+        elevation: 0,
+        backgroundColor: Color.fromARGB(255, 2, 120, 141),
       ),
       endDrawer: draWer(),
       body: Column(
@@ -39,8 +39,8 @@ class _HomepageState extends State<Homepage> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 5,
+                      color: Colors.black.withOpacity(0.10),
+                      spreadRadius: 10,
                       blurRadius: 10,
                       offset: Offset(0, 4),
                     ),
@@ -53,66 +53,49 @@ class _HomepageState extends State<Homepage> {
               ),
               Container(
                 width: double.infinity,
-                height: 290,
+                height: 220,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color.fromARGB(255, 45, 49, 116),
-                      Color.fromARGB(255, 1, 15, 54),
-                    ],
-                  ),
+                  color: Color.fromARGB(255, 2, 120, 141),
                   borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
+                    bottomLeft: Radius.circular(70),
+                    bottomRight: Radius.circular(70),
                   ),
                 ),
                 child: Stack(
                   children: [
-                    Positioned(left: 20, top: 10, child: AnimatedSearchBar()),
-                    Positioned(
-                        top: 65,
-                        left: 20,
-                        child: ShaderMask(
-                          shaderCallback: (Rect bounds) {
-                            return LinearGradient(
-                              colors: [
-                                Colors.grey[600]!,
-                                Colors.grey[500]!,
-                                Colors.grey[200]!,
-                                Colors.grey[600]!,
-                                Colors.grey[300]!,
-                                Colors.grey[200]!,
-                              ],
-                              tileMode: TileMode.clamp,
-                            ).createShader(bounds);
-                          },
-                          child: Text(
-                            'Hello..!\nAjmal',
-                            style: TextStyle(
-                              fontSize: 50,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                            ),
-                          ),
-                        )),
-                    _positionedContainer1(
-                        200,
-                        'asset/checked (2).png',
-                        'Stop thinking start Doing..',
-                        Color.fromARGB(255, 252, 172, 1),
-                        210),
-                    _positionedContainer1(
-                        240,
-                        'asset/like.png',
-                        'Say no Excuses',
-                        const Color.fromARGB(255, 80, 209, 84),
-                        170),
-                    _positionedContainer(90, 255),
-                    _positionedContainer(140, 255),
-                    _positionedContainer(190, 255),
+                    Positioned(left: 10, child: AnimatedSearchBar()),
                   ],
+                ),
+              ),
+              Positioned(
+                top: 100,
+                left: 11,
+                child: Container(
+                  width: 390,
+                  height: 110,
+                  alignment: Alignment.centerLeft,
+                  decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 3, 149, 175),
+                      borderRadius: BorderRadius.circular(70)),
+                  child: Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Color.fromARGB(255, 185, 184, 184),
+                            width: 2.0,
+                          ),
+                        ),
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.grey,
+                        ),
+                      ),
+                      SizedBox(width: 20,),
+                      Text('Hello',style: TextStyle(fontSize: 20,color: Colors.white),)
+                    ],
+                  ),
                 ),
               )
             ],
@@ -123,16 +106,16 @@ class _HomepageState extends State<Homepage> {
           Padding(
             padding: const EdgeInsets.only(left: 8, right: 8),
             child: Container(
-              height: 40,
+              height: 60,
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Colors.grey[200],
+                color: Colors.white,
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       "All Task's",
@@ -140,6 +123,42 @@ class _HomepageState extends State<Homepage> {
                           fontWeight: FontWeight.w800,
                           fontSize: 20,
                           color: Colors.grey),
+                    ),
+                    FloatingActionButton(
+                      backgroundColor: Color.fromARGB(255, 255, 102, 0),
+                      splashColor: Color.fromARGB(255, 240, 189, 48),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Add Task'),
+                              content: TextFormField(
+                                controller: dialogueController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                      color: Color.fromARGB(255, 4, 18, 94)),
+                                )),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                    child: Text('Add'),
+                                    onPressed: () {
+                                      addTask();
+                                    }),
+                                TextButton(
+                                    child: Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    }),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Icon(Icons.add),
                     ),
                   ],
                 ),
@@ -157,7 +176,7 @@ class _HomepageState extends State<Homepage> {
                 );
               },
             ),
-          )
+          ),
         ],
       ),
     );
@@ -204,5 +223,12 @@ class _HomepageState extends State<Homepage> {
         ),
       ),
     );
+  }
+
+  void addTask() {
+    setState(() {
+      todolist.add([dialogueController.text, false]);
+    });
+    Navigator.of(context).pop();
   }
 }

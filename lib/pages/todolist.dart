@@ -4,6 +4,7 @@ class toDolist extends StatelessWidget {
   final String taskName;
   final bool tasComplete;
   Function(bool?)? onChanged;
+  
 
   toDolist({
     super.key,
@@ -29,24 +30,32 @@ class toDolist extends StatelessWidget {
                     onChanged: onChanged,
                     activeColor: Colors.green,
                     hoverColor: Colors.grey[200]),
-                Text(taskName,style: TextStyle(decoration: TextDecoration.lineThrough),),
+                Text(
+                  taskName,
+                  style: TextStyle(
+                      decoration: tasComplete
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none),
+                ),
               ],
             ),
             Row(
               children: [
                 GestureDetector(
+                    onTap: () {},
                     child: Icon(
-                  Icons.edit,
-                  color: Colors.grey,
-                )),
+                      Icons.edit,
+                      color: Colors.grey,
+                    )),
                 SizedBox(
                   width: 7,
                 ),
                 GestureDetector(
+                    onTap: () {},
                     child: Icon(
-                  Icons.delete,
-                  color: Colors.red[900],
-                )),
+                      Icons.delete,
+                      color: Colors.red[900],
+                    )),
               ],
             )
           ],

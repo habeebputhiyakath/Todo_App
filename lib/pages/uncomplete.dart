@@ -12,14 +12,7 @@ class UnComplete extends StatelessWidget {
                 width: double.infinity,
                 height: 350,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color.fromARGB(255, 45, 49, 116),
-                      Color.fromARGB(255, 1, 15, 54),
-                    ],
-                  ),
+                 color: Color.fromARGB(255, 2, 120, 141),
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(25),
                     bottomRight: Radius.circular(25),
@@ -27,7 +20,7 @@ class UnComplete extends StatelessWidget {
                 ),
                 child: Stack(
                   children: [
-                    _completedIcons(110,70,Icons.sentiment_dissatisfied_rounded,180,Colors.indigo),
+                    _completedIcons(110,70,Icons.sentiment_dissatisfied_rounded,180,Color.fromARGB(255, 3, 149, 175),),
                     _completedIcons(110,70,Icons.water_drop,40,Colors.cyan),
                     _completedIcons(275,110,Icons.water_drop,30,Colors.cyan),
                     _completedIcons(125,220,Icons.water_drop,30,Colors.cyan),
