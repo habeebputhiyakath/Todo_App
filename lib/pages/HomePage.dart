@@ -8,12 +8,13 @@ class Homepage extends StatefulWidget {
   const Homepage({
     super.key,
   });
-
+  
   @override
   State<Homepage> createState() => _HomepageState();
 }
 
 class _HomepageState extends State<Homepage> {
+  
   bool isChecked = false;
   List todolist = [];
   final dialogueController = TextEditingController();
@@ -173,6 +174,9 @@ class _HomepageState extends State<Homepage> {
                   taskName: todolist[index][0],
                   tasComplete: todolist[index][1],
                   onChanged: (value) => checkBoxchanged(value, index),
+                  deleteFunction: (context) {
+                    deleteTask(index);
+                  },
                 );
               },
             ),
@@ -227,8 +231,16 @@ class _HomepageState extends State<Homepage> {
 
   void addTask() {
     setState(() {
-      todolist.add([dialogueController.text, false]);
+      todolist.add([dialogueController.text.trim(), false]);
+      Navigator.of(context).pop();
+
     });
-    Navigator.of(context).pop();
+    
+  }
+  
+  void deleteTask(int index) {
+    setState(() {
+      todolist.removeAt(index);
+    });
   }
 }

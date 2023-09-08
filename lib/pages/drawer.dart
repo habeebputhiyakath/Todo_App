@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:todolist/pages/privacypage.dart';
 
 class draWer extends StatelessWidget {
   const draWer({Key? key}) : super(key: key);
@@ -7,25 +8,20 @@ class draWer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      elevation: 5,
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
          
           Container(height: 100,width: double.infinity,
           decoration:BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color.fromARGB(255, 45, 49, 116),
-                      Color.fromARGB(255, 1, 15, 54),
-                    ],
-                  ),
+                color: Color.fromARGB(255, 2, 120, 141),
+                
                 ),
           child: Column(
             children: [
               SizedBox(height: 50,),
-              Text('Settings',style: TextStyle(color: const Color.fromARGB(255, 190, 188, 188),fontWeight: FontWeight.w600,fontSize: 25,),),
+              Text('Settings',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 25,),),
             ],
           ),
           ),
@@ -38,14 +34,14 @@ class draWer extends StatelessWidget {
               ],
             ),
             onTap: () {
-            
+             Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>PrivacyPage()));
             },
           ),
           Divider(),
           ListTile(
             title: Text('Account Setting',style: TextStyle(color: const Color.fromARGB(255, 80, 79, 79),fontSize: 17),),
             onTap: () {
-           
+               
             },
           ),
           Divider(),

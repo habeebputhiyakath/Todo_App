@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:todolist/pages/chart.dart';
 
-import 'pages/Complete.dart';
-import 'pages/HomePage.dart';
-import 'pages/uncomplete.dart';
+import 'Complete.dart';
+import 'HomePage.dart';
+import 'uncomplete.dart';
 
 class BottomNavigation extends StatefulWidget {
-  const BottomNavigation({super.key});
+  BottomNavigation({super.key});
   
 
   @override
@@ -15,10 +15,9 @@ class BottomNavigation extends StatefulWidget {
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
-  final dialogueController = TextEditingController();
-  int _selectIndex = 0;
+  int selectIndex = 0;
 
-  static List _widgetOptions = [
+  static List widgetOptions = [
     Homepage(),
     ComPleted(),
     UnComplete(),
@@ -36,10 +35,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
         bucket: bucket,
         child: currentScreen,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         color: Color.fromARGB(255, 2, 120, 141),
-        shape: CircularNotchedRectangle(),
         notchMargin: 10,
         child: Container(
           height: 74,
@@ -50,7 +47,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 onPressed: () {
                   setState(() {
                     currentScreen = Homepage();
-                    _selectIndex = 0;
+                    selectIndex = 0;
                   });
                 },
                 child: Column(
@@ -59,14 +56,14 @@ class _BottomNavigationState extends State<BottomNavigation> {
                     Icon(
                       Icons.home_outlined,
                       size: 30,
-                      color: _selectIndex == 0
+                      color: selectIndex == 0
                           ? Colors.orange
                           : Colors.white,
                     ),
                     Text(
                       'Home',
                       style: TextStyle(
-                        color: _selectIndex == 0
+                        color: selectIndex == 0
                             ?  Colors.orange
                             : Colors.white,
                       ),
@@ -78,7 +75,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 onPressed: () {
                   setState(() {
                     currentScreen = ComPleted();
-                    _selectIndex = 1;
+                    selectIndex = 1;
                   });
                 },
                 child: Column(
@@ -87,14 +84,14 @@ class _BottomNavigationState extends State<BottomNavigation> {
                     Icon(
                       Icons.task_alt_outlined,
                       size: 30,
-                      color: _selectIndex == 1
+                      color: selectIndex == 1
                           ?  Colors.orange
                           : Colors.white,
                     ),
                     Text(
                       'Complete',
                       style: TextStyle(
-                        color: _selectIndex == 1
+                        color: selectIndex == 1
                             ?  Colors.orange
                             : Colors.white,
                       ),
@@ -108,7 +105,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                   setState(() {
                     currentScreen = UnComplete();
                     ;
-                    _selectIndex = 2;
+                    selectIndex = 2;
                   });
                 },
                 child: Column(
@@ -117,14 +114,14 @@ class _BottomNavigationState extends State<BottomNavigation> {
                     Icon(
                       Icons.rule,
                       size: 30,
-                      color: _selectIndex == 2
+                      color: selectIndex == 2
                           ?  Colors.orange
                           : Colors.white,
                     ),
                     Text(
                       'Incomplete',
                       style: TextStyle(
-                        color: _selectIndex == 2
+                        color: selectIndex == 2
                             ? Colors.orange
                             : Colors.white,
                       ),
@@ -136,7 +133,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 onPressed: () {
                   setState(() {
                     currentScreen = Chart();
-                    _selectIndex = 3;
+                    selectIndex = 3;
                   });
                 },
                 child: Column(
@@ -145,14 +142,14 @@ class _BottomNavigationState extends State<BottomNavigation> {
                     Icon(
                       Icons.leaderboard_outlined,
                       size: 30,
-                      color: _selectIndex == 3
+                      color: selectIndex == 3
                           ?  Colors.orange
                           : Colors.white,
                     ),
                     Text(
                       'Chart',
                       style: TextStyle(
-                        color: _selectIndex == 3
+                        color: selectIndex == 3
                             ?  Colors.orange
                             : Colors.white,
                       ),

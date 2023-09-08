@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 class toDolist extends StatelessWidget {
   final String taskName;
   final bool tasComplete;
-  Function(bool?)? onChanged;
+  final Function(bool?)? onChanged;
+  final Function(BuildContext?)? deleteFunction;
+  
   
 
   toDolist({
@@ -11,6 +13,8 @@ class toDolist extends StatelessWidget {
     required this.taskName,
     required this.tasComplete,
     required this.onChanged,
+    required this.deleteFunction,
+    
   });
 
   @override
@@ -41,7 +45,7 @@ class toDolist extends StatelessWidget {
             ),
             Row(
               children: [
-                GestureDetector(
+                InkWell(
                     onTap: () {},
                     child: Icon(
                       Icons.edit,
@@ -50,12 +54,15 @@ class toDolist extends StatelessWidget {
                 SizedBox(
                   width: 7,
                 ),
-                GestureDetector(
-                    onTap: () {},
-                    child: Icon(
-                      Icons.delete,
-                      color: Colors.red[900],
-                    )),
+                InkWell(
+                  onTap: () {
+                    deleteFunction!(context);
+                  },
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.red[900],
+                  ),
+                )
               ],
             )
           ],
