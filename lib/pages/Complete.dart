@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:todolist/pages/HomePage.dart';
 
 class ComPleted extends StatelessWidget {
-  const ComPleted({super.key});
-
+ ComPleted({super.key});
+  Homepage completed=Homepage();
   @override
   Widget build(BuildContext context) {
    return Scaffold(
@@ -52,7 +53,8 @@ class ComPleted extends StatelessWidget {
                 ),
               ),
                 ),
-              )
+              ),
+              
         ],
       )
     );
