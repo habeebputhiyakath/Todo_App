@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todolist/pages/aboutpage.dart';
-import 'package:todolist/pages/privacypage.dart';
+import 'package:todolist/screens/widget_pages/drawer_pages/aboutpage.dart';
+import 'package:todolist/screens/widget_pages/drawer_pages/privacypage.dart';
 
 class draWer extends StatelessWidget {
   const draWer({Key? key}) : super(key: key);

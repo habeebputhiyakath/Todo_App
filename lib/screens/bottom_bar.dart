@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:todolist/pages/chart.dart';
+import 'package:todolist/screens/chart.dart';
 
-import 'Complete.dart';
-import 'HomePage.dart';
+import 'completed_page.dart';
+import 'home_page.dart';
 import 'uncomplete.dart';
 
 class BottomNavigation extends StatefulWidget {
@@ -86,7 +86,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                       size: 30,
                       color: selectIndex == 1
                           ?  Colors.orange
-                          : Colors.white,
+                          :  Colors.white,
                     ),
                     Text(
                       'Complete',

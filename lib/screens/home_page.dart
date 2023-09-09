@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:todolist/pages/search%20bar.dart';
+import 'package:todolist/screens/widget_pages/search%20bar.dart';
 
-import 'drawer.dart';
-import 'todolist.dart';
+import 'widget_pages/drawer.dart';
+import 'widget_pages/todolist.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({

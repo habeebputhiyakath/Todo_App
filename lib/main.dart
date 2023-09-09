@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todolist/pages/HomePage.dart';
-import 'pages/Navbar.dart';
+import 'package:todolist/screens/home_page.dart';
+import 'screens/bottom_bar.dart';
 
 void main() {
   runApp(const MyApp());

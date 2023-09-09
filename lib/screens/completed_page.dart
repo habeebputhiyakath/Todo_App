@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todolist/pages/HomePage.dart';
+import 'package:todolist/screens/home_page.dart';
 
 class ComPleted extends StatelessWidget {
  ComPleted({super.key});
