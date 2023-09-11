@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:todolist/screens/chart.dart';
 
+import '../theme/theme_manager.dart';
 import 'completed_page.dart';
 import 'home_page.dart';
 import 'in_complete.dart';
@@ -29,6 +31,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   
   @override
   Widget build(BuildContext context) {
+    final themeManager = Provider.of<ThemeManager>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: PageStorage(
@@ -36,7 +39,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         child: currentScreen,
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Color.fromARGB(255, 2, 120, 141),
+        color: themeManager.primaryColor,
         notchMargin: 10,
         child: Container(
           height: 74,

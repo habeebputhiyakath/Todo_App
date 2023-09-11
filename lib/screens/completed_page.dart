@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todolist/screens/home_page.dart';
+
+import '../theme/theme_manager.dart';
 
 class ComPleted extends StatelessWidget {
  ComPleted({super.key});
   Homepage completed=Homepage();
   @override
   Widget build(BuildContext context) {
+    final themeManager = Provider.of<ThemeManager>(context);
    return Scaffold(
       body: Column(
         children: [
           Container(
                 width: double.infinity,
-                height: 350,
+                height: 320,
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 2, 120, 141),
+                  color: themeManager.primaryColor,
                   borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
+                    bottomLeft: Radius.circular(75),
+                    bottomRight: Radius.circular(75),
                   ),
                 ),
                 child: Stack(
                   children: [
-                    _completedIcons(110,70,Icons.sentiment_satisfied_rounded,180,Color.fromARGB(255, 3, 149, 175),),
+                    _completedIcons(110,70,Icons.sentiment_satisfied_rounded,180,themeManager.smileyColors),
                     _completedIcons(110,70,Icons.star,40,Colors.amber[400]!),
                     _completedIcons(275,110,Icons.star,30,Colors.amber[400]!),
                     _completedIcons(125,220,Icons.star,30,Colors.amber[400]!),
@@ -34,7 +38,7 @@ class ComPleted extends StatelessWidget {
                   width: double.infinity,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
+                    color: themeManager.headingsColor,
                     borderRadius: BorderRadius.circular(10)
                   ),
                   child:Padding(

@@ -27,7 +27,7 @@ class _draWerState extends State<draWer> {
             height: 100,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 2, 120, 141),
+              color: themeManager.draWerColors,
             ),
             child: Column(
               children: [

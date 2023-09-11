@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todolist/screens/widget_pages/search%20bar.dart';
 
+import '../theme/theme_manager.dart';
 import 'widget_pages/drawer.dart';
 import 'widget_pages/todolist.dart';
 
@@ -26,10 +28,11 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeManager = Provider.of<ThemeManager>(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Color.fromARGB(255, 2, 120, 141),
+        backgroundColor:themeManager.primaryColor,
       ),
       endDrawer: draWer(),
       body: Column(
@@ -37,6 +40,8 @@ class _HomepageState extends State<Homepage> {
           Stack(
             children: [
               Container(
+                height: 210,
+                width: double.infinity,
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
@@ -56,7 +61,7 @@ class _HomepageState extends State<Homepage> {
                 width: double.infinity,
                 height: 220,
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 2, 120, 141),
+                  color:themeManager.primaryColor,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(70),
                     bottomRight: Radius.circular(70),
@@ -76,7 +81,7 @@ class _HomepageState extends State<Homepage> {
                   height: 110,
                   alignment: Alignment.centerLeft,
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 3, 149, 175),
+                      color: themeManager.pictureContainer,
                       borderRadius: BorderRadius.circular(70)),
                   child: Row(
                     children: [
@@ -110,8 +115,8 @@ class _HomepageState extends State<Homepage> {
               height: 60,
               width: double.infinity,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
+                borderRadius: BorderRadius.circular(80),
+                color:themeManager.headingsColor,
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -126,7 +131,7 @@ class _HomepageState extends State<Homepage> {
                           color: Colors.grey),
                     ),
                     FloatingActionButton(
-                      backgroundColor: Color.fromARGB(255, 255, 102, 0),
+                      backgroundColor: themeManager.accentColor,
                       splashColor: Color.fromARGB(255, 240, 189, 48),
                       onPressed: () {
                         showDialog(

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../theme/theme_manager.dart';
 
 class AnimatedSearchBar extends StatefulWidget {
   @override
@@ -11,6 +14,7 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    final themeManager = Provider.of<ThemeManager>(context);
     return AnimatedContainer(
       curve: Curves.bounceIn,
       duration: Duration(milliseconds: 300),
@@ -19,7 +23,7 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
       alignment: _isSearching ? Alignment.centerLeft : Alignment.centerRight,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(80.0), 
-        color: _isSearching?Color.fromARGB(255, 10, 137, 160):Color.fromARGB(255, 2, 120, 141),
+        color: _isSearching?themeManager.searchIcons:themeManager.primaryColor,
       ),
       child: Row(
         children: <Widget>[
