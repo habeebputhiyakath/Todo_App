@@ -62,7 +62,6 @@ class AboutPage extends StatelessWidget {
                 featuresAdd(text1: 'Create and Manage Tasks:',text2: 'Quickly add, edit, and organize your to-do items with ease.'),
                 featuresAdd(text1: 'Task Completion:',text2: 'Mark tasks as completed to track your progress.'),
                 featuresAdd(text1: 'Task Notes:',text2: 'Add notes to tasks for additional details.'),
-                featuresAdd(text1: 'Customizable Themes:',text2: 'Personalize your app with a variety of themes to suit your style.'),
                 featuresAdd(text1: 'Dark Mode:',text2:'Reduce eye strain and conserve battery life with our dark mode.' ),
                 featuresAdd(text1: 'Privacy and Security:',text2: 'Rest assured that your data is secure and private.'),
                 makeSpace(10),

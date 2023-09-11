@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todolist/screens/widget_pages/drawer_pages/aboutpage.dart';
 import 'package:todolist/screens/widget_pages/drawer_pages/privacypage.dart';
 
-class draWer extends StatelessWidget {
-  const draWer({Key? key}) : super(key: key);
+import '../../theme/theme_manager.dart';
+
+class draWer extends StatefulWidget {
+  draWer({Key? key}) : super(key: key);
+
+  get themeMode => null;
 
   @override
+  State<draWer> createState() => _draWerState();
+}
+
+class _draWerState extends State<draWer> {
+  @override
   Widget build(BuildContext context) {
+    final themeManager = Provider.of<ThemeManager>(context);
     return Drawer(
       elevation: 5,
       child: ListView(
@@ -102,10 +113,11 @@ class draWer extends StatelessWidget {
               ],
             ),
             trailing: Switch(
-              value: false,
-              onChanged: (newValue) {},
+              value: themeManager.currentThemeType == ThemeType.dark,
+              onChanged: (newValue) {
+                themeManager.toggleTheme();
+              },
             ),
-            onTap: () {},
           ),
           Divider(),
           ListTile(

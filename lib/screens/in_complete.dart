@@ -42,7 +42,7 @@ class UnComplete extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      "Incompleted",
+                      "Incomplete",
                       style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 20,
