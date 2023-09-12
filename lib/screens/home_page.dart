@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todolist/screens/widget_pages/search%20bar.dart';
-
 import '../theme/theme_manager.dart';
 import 'widget_pages/drawer.dart';
 import 'widget_pages/todolist.dart';
 
 class Homepage extends StatefulWidget {
-  const Homepage({
+  Homepage({
     super.key,
   });
-  
   @override
   State<Homepage> createState() => _HomepageState();
 }
 
 class _HomepageState extends State<Homepage> {
- draWer tfd=draWer();
-  bool isChecked = false;
   List todolist = [];
+  bool isChecked = false;
+
   final dialogueController = TextEditingController();
   void checkBoxchanged(bool? value, int index) {
     setState(() {
@@ -32,7 +30,7 @@ class _HomepageState extends State<Homepage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor:themeManager.primaryColor,
+        backgroundColor: themeManager.primaryColor,
       ),
       endDrawer: draWer(),
       body: Column(
@@ -61,7 +59,7 @@ class _HomepageState extends State<Homepage> {
                 width: double.infinity,
                 height: 220,
                 decoration: BoxDecoration(
-                  color:themeManager.primaryColor,
+                  color: themeManager.primaryColor,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(70),
                     bottomRight: Radius.circular(70),
@@ -98,8 +96,13 @@ class _HomepageState extends State<Homepage> {
                           backgroundColor: Colors.grey,
                         ),
                       ),
-                      SizedBox(width: 20,),
-                      Text('Hello',style: TextStyle(fontSize: 20,color: Colors.white),)
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        'Hello',
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      )
                     ],
                   ),
                 ),
@@ -115,8 +118,8 @@ class _HomepageState extends State<Homepage> {
               height: 60,
               width: double.infinity,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(80),
-                color:themeManager.headingsColor,
+                borderRadius: BorderRadius.circular(10),
+                color: themeManager.headingsColor,
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -238,11 +241,9 @@ class _HomepageState extends State<Homepage> {
     setState(() {
       todolist.add([dialogueController.text.trim(), false]);
       Navigator.of(context).pop();
-
     });
-    
   }
-  
+
   void deleteTask(int index) {
     setState(() {
       todolist.removeAt(index);

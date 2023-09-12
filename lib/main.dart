@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-
-import 'screens/bottom_bar.dart';
+import 'bottom_bar.dart';
 import 'theme/theme_manager.dart';
 
-void main() {
+void main()async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  await Hive.openBox('Mybox');
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeManager(),
       child: const MyApp(),
-    ),
+    ), 
   );
 }
 

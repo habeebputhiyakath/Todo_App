@@ -5,8 +5,7 @@ import 'package:todolist/screens/home_page.dart';
 import '../theme/theme_manager.dart';
 
 class ComPleted extends StatelessWidget {
- ComPleted({super.key});
-  Homepage completed=Homepage();
+ ComPleted({super.key}); 
   @override
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
@@ -19,8 +18,8 @@ class ComPleted extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: themeManager.primaryColor,
                   borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(75),
-                    bottomRight: Radius.circular(75),
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25),
                   ),
                 ),
                 child: Stack(

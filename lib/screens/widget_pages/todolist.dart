@@ -33,7 +33,7 @@ class toDolist extends StatelessWidget {
   ),
   child: Card(
     color: themeManager.headingsColor,
-    elevation: 3,
+    elevation: 10,
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

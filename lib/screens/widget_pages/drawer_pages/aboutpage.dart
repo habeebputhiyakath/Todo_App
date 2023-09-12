@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../../theme/theme_manager.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final themeManager = Provider.of<ThemeManager>(context);
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 2, 120, 141),
+          backgroundColor: themeManager.primaryColor,
           title: Text('About'),
         ),
         body: Padding(

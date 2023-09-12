@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todolist/theme/theme_manager.dart';
 
 class PrivacyPage extends StatelessWidget {
   const PrivacyPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final themeManager = Provider.of<ThemeManager>(context);
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Color.fromARGB(255, 2, 120, 141),
+        elevation: 2,
+        backgroundColor: themeManager.primaryColor,
         title: Text(
           'Privacy Policy',
           style: TextStyle(color: Colors.white),

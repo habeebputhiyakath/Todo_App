@@ -3,10 +3,10 @@ import 'package:provider/provider.dart';
 
 import 'package:todolist/screens/chart.dart';
 
-import '../theme/theme_manager.dart';
-import 'completed_page.dart';
-import 'home_page.dart';
-import 'in_complete.dart';
+import 'theme/theme_manager.dart';
+import 'screens/completed_page.dart';
+import 'screens/home_page.dart';
+import 'screens/in_complete.dart';
 
 class BottomNavigation extends StatefulWidget {
   BottomNavigation({super.key});
