@@ -56,31 +56,21 @@ bool isChecked = false;
           Stack(
             children: [
               Container(
-                height: 210,
                 width: double.infinity,
+                height: 220,
                 decoration: BoxDecoration(
-                  boxShadow: [
+                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.10),
-                      spreadRadius: 10,
+                      color: Colors.black.withOpacity(0.50),
+                      spreadRadius: 5,
                       blurRadius: 10,
                       offset: Offset(0, 4),
                     ),
                   ],
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
-                  ),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                height: 220,
-                decoration: BoxDecoration(
                   color: themeManager.primaryColor,
                   borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(70),
-                    bottomRight: Radius.circular(70),
+                    bottomLeft: Radius.circular(60),
+                    bottomRight: Radius.circular(60),
                   ),
                 ),
                 child: Stack(
@@ -90,19 +80,25 @@ bool isChecked = false;
                 ),
               ),
               Positioned(
-                top: 100,
+                top: 92,
                 left: 11,
                 child: Container(
                   width: 390,
                   height: 110,
                   alignment: Alignment.centerLeft,
                   decoration: BoxDecoration(
+                    boxShadow: [
+                      shadow(5, 1)
+                    ],
                       color: themeManager.pictureContainer,
                       borderRadius: BorderRadius.circular(70)),
                   child: Row(
                     children: [
                       Container(
                         decoration: BoxDecoration(
+                          boxShadow: [
+                            shadow(5,3)
+                          ],
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: Color.fromARGB(255, 185, 184, 184),
@@ -210,6 +206,16 @@ bool isChecked = false;
         ],
       ),
     );
+  }
+
+  BoxShadow shadow(double blurRadius,double spreadRadius) {
+    return BoxShadow(
+                            blurRadius: blurRadius,
+                            spreadRadius: spreadRadius,
+                            color: Color.fromARGB(255, 8, 8, 8).withOpacity(0.30),
+                            offset: Offset(0, 7),
+                            
+                          );
   }
 
   Positioned _positionedContainer1(

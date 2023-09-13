@@ -19,6 +19,7 @@ class toDolist extends StatelessWidget {
     required this.deleteFunction,
     
   });
+  TextEditingController dialogueController=TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,55 +33,80 @@ class toDolist extends StatelessWidget {
     borderRadius: BorderRadius.circular(20), 
   ),
   child: Card(
-    color: themeManager.headingsColor,
-    elevation: 10,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            Checkbox(
-              value: tasComplete,
-              onChanged: onChanged,
-              activeColor: Colors.green,
-              hoverColor: Colors.grey[200],
-            ),
-            Text(
-              taskName,
-              style: TextStyle(
-                decoration: tasComplete
-                    ? TextDecoration.lineThrough
-                    : TextDecoration.none,
-              ),
-            ),
-          ],
+  color: themeManager.headingsColor,
+  elevation: 10,
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Checkbox(
+        value: tasComplete,
+        onChanged: onChanged,
+        activeColor: Colors.green,
+        hoverColor: Colors.grey[200],
+      ),
+      Expanded(
+        child: Text(
+          taskName,
+          style: TextStyle(
+            decoration: tasComplete
+                ? TextDecoration.lineThrough
+                : TextDecoration.none,
+          ),
         ),
-        Row(
-          children: [
-            InkWell(
-              onTap: () {},
-              child: Icon(
-                Icons.edit,
-                color: Colors.grey,
-              ),
-            ),
-            SizedBox(
-              width: 7,
-            ),
-            InkWell(
-              onTap: () {
-                deleteFunction!(context);
-              },
-              child: Icon(
-                Icons.delete,
-                color: themeManager.deleteIcons,
-              ),
-            )
-          ],
-        )
-      ],
-    ),
+      ),
+      InkWell(
+        onTap: () {
+          showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Add Task'),
+                              content: TextFormField(
+                                controller: dialogueController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                      color: Color.fromARGB(255, 4, 18, 94)),
+                                )),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                    child: Text('Add'),
+                                    onPressed: () {
+                                      
+                                    }),
+                                TextButton(
+                                    child: Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    }),
+                              ],
+                            );
+                          },
+                        );
+        },
+        child: Icon(
+          Icons.edit,
+          color: Colors.grey,
+        ),
+      ),
+      SizedBox(
+        width: 7,
+      ),
+      InkWell(
+        onTap: () {
+          deleteFunction!(context);
+        },
+        child: Icon(
+          Icons.delete,
+          color: themeManager.deleteIcons,
+        ),
+      )
+    ],
   ),
+),
+
 )
 
     );

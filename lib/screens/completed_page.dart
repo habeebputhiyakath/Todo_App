@@ -14,12 +14,20 @@ class ComPleted extends StatelessWidget {
         children: [
           Container(
                 width: double.infinity,
-                height: 320,
+                height: 315,
                 decoration: BoxDecoration(
                   color: themeManager.primaryColor,
+                  boxShadow: [
+                   BoxShadow(
+                      color: Colors.black.withOpacity(0.50),
+                      spreadRadius: 5,
+                      blurRadius: 10,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
                   borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(75),
-                    bottomRight: Radius.circular(75),
+                    bottomLeft: Radius.circular(60),
+                    bottomRight: Radius.circular(60),
                   ),
                 ),
                 child: Stack(

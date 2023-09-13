@@ -21,8 +21,8 @@ class ThemeManager extends ChangeNotifier {
       ? Colors.grey[900]!
       : Color.fromARGB(255, 1, 68, 80);
   Color get deleteIcons => _currentThemeType == ThemeType.dark
-      ? Color.fromARGB(255, 36, 3, 180)
-      : Color.fromARGB(255, 131, 1, 29);
+      ? Color.fromARGB(255, 151, 143, 144)
+      : Color.fromARGB(255, 99, 90, 92);
   Color get searchIcons => _currentThemeType == ThemeType.dark
       ? Color.fromARGB(255, 20, 20, 20)
       : Color.fromARGB(255, 1, 68, 80);
