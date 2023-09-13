@@ -18,8 +18,8 @@ class UnComplete extends StatelessWidget {
                 decoration: BoxDecoration(
                  color: themeManager.primaryColor,
                   borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
+                    bottomLeft: Radius.circular(75),
+                    bottomRight: Radius.circular(75),
                   ),
                 ),
                 child: Stack(

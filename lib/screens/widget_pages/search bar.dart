@@ -19,7 +19,7 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
       curve: Curves.bounceIn,
       duration: Duration(milliseconds: 300),
       width: _isSearching ? 390.0 : 48,
-      height: 47.0,
+      height: 50.0,
       alignment: _isSearching ? Alignment.centerLeft : Alignment.centerRight,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(80.0), 

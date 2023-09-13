@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:todolist/screens/widget_pages/search%20bar.dart';
 import '../theme/theme_manager.dart';
@@ -12,21 +13,38 @@ class Homepage extends StatefulWidget {
   @override
   State<Homepage> createState() => _HomepageState();
 }
-
 class _HomepageState extends State<Homepage> {
-  List todolist = [];
-  bool isChecked = false;
+  final _myBox = Hive.box('Mybox');
+  @override
+  void initState() {
+    super.initState();
+    _initializeTasks();
+  }
 
+  void _initializeTasks() {
+    for (var i = 0; i < _myBox.length; i++) {
+      final task = _myBox.getAt(i);
+      todolist.add([task['taskName'], task['taskComplete']]);
+    }
+  }
+List todolist = [];
+bool isChecked = false;
   final dialogueController = TextEditingController();
   void checkBoxchanged(bool? value, int index) {
-    setState(() {
-      todolist[index][1] = !todolist[index][1];
-    });
-  }
+  final task = _myBox.getAt(index);
+  task['taskComplete'] = value ?? false;
+  _myBox.putAt(index, task);
+  setState(() {
+    todolist[index][1] = value ?? false;
+  });
+}
+
+
 
   @override
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -238,15 +256,24 @@ class _HomepageState extends State<Homepage> {
   }
 
   void addTask() {
+    final taskName = dialogueController.text;
+    final taskComplete = false;
+
+    _myBox.add({'taskName': taskName, 'taskComplete': taskComplete});
+
+    dialogueController.clear();
+
+    Navigator.of(context).pop();
     setState(() {
-      todolist.add([dialogueController.text.trim(), false]);
-      Navigator.of(context).pop();
+      todolist.add([taskName, taskComplete]);
     });
   }
 
   void deleteTask(int index) {
+    _myBox.deleteAt(index);
     setState(() {
       todolist.removeAt(index);
     });
   }
 }
+
