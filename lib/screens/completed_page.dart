@@ -1,80 +1,79 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:todolist/screens/home_page.dart';
+import 'package:todolist/model/data_model.dart';
+import 'package:todolist/screens/widget_pages/todolist.dart';
 
 import '../theme/theme_manager.dart';
 
-class ComPleted extends StatelessWidget {
- ComPleted({super.key}); 
+class Completed extends StatefulWidget {
+  Completed({Key? key}) : super(key: key);
+
+  @override
+  _CompletedState createState() => _CompletedState();
+}
+
+class _CompletedState extends State<Completed> {
+  List<TaskModel> completedTasks = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeCompletedTasks();
+  }
+
+  void _initializeCompletedTasks() {
+    // Assuming you have a Hive box for completed tasks, replace 'CompletedBox' with your actual box name
+    final completedBox = Hive.box('Mybox');
+
+    for (var i = 0; i < completedBox.length; i++) {
+      final task = completedBox.getAt(i);
+      setState(() {
+        completedTasks.add(TaskModel(
+          taskName: task['taskName'],
+          tasComplete: task['taskComplete'],
+        ));
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
-   return Scaffold(
-      body: Column(
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: themeManager.primaryColor,
+        title: Text('Completed Tasks'),
+      ),
+      body: Stack(
         children: [
           Container(
-                width: double.infinity,
-                height: 315,
-                decoration: BoxDecoration(
-                  color: themeManager.primaryColor,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.40),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(60),
-                    bottomRight: Radius.circular(60),
-                  ),
-                ),
-                child: Stack(
-                  children: [
-                    _completedIcons(110,70,Icons.sentiment_satisfied_rounded,180,themeManager.smileyColors),
-                    _completedIcons(110,70,Icons.star,40,Colors.amber[400]!),
-                    _completedIcons(275,110,Icons.star,30,Colors.amber[400]!),
-                    _completedIcons(125,220,Icons.star,30,Colors.amber[400]!),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(13.0),
-                child: Container(
-                  width: double.infinity,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: themeManager.headingsColor,
-                    borderRadius: BorderRadius.circular(10)
-                  ),
-                  child:Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Completed",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 20,
-                          color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ),
-                ),
-              ),
-              
+            width: double.infinity,
+            height: 400,
+            decoration: BoxDecoration(color: themeManager.primaryColor,
+            borderRadius: BorderRadius.only(bottomLeft:Radius.circular(300),bottomRight: Radius.circular(300))
+            ),
+          ),
+           ListView.builder(
+          itemCount: completedTasks.length,
+          itemBuilder: (context, index) {
+            final taskModel = completedTasks[index];
+      
+            return toDolist(
+              taskName: taskModel.taskName,
+              tasComplete: taskModel.tasComplete,
+              onChanged: (value) {
+                return null;
+              },
+              deleteFunction: (context) {
+                return null;
+              },
+            );
+          },
+        ),
         ],
-      )
+      ),
     );
-  }
-
-  Positioned _completedIcons(double left,double top, IconData icon,double iconSize,Color color) {
-    return Positioned(
-                    left: left,
-                    top: top,
-                    child: Icon(icon,size: iconSize,color: color,));
   }
 }

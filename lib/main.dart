@@ -8,9 +8,10 @@ import 'theme/theme_manager.dart';
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  if (!Hive.isAdapterRegistered(TaskModelAdapter().typeId)) {
-    Hive.registerAdapter(TaskModelAdapter());
-  }
+  // if (!Hive.isAdapterRegistered(TaskModelAdapter().typeId)) {
+  //   Hive.registerAdapter(TaskModelAdapter());
+  // }
+  await Hive.openBox('Mybox');
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeManager(),
