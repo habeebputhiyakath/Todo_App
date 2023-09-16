@@ -18,10 +18,10 @@ class ComPleted extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: themeManager.primaryColor,
                   boxShadow: [
-                   BoxShadow(
-                      color: Colors.black.withOpacity(0.50),
-                      spreadRadius: 5,
-                      blurRadius: 10,
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.40),
+                      spreadRadius: 2,
+                      blurRadius: 5,
                       offset: Offset(0, 4),
                     ),
                   ],

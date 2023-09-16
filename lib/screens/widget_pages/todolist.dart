@@ -60,7 +60,7 @@ class toDolist extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Add Task'),
+                              title: Text('Edit Task'),
                               content: TextFormField(
                                 controller: dialogueController,
                                 decoration: InputDecoration(
@@ -72,7 +72,7 @@ class toDolist extends StatelessWidget {
                               ),
                               actions: <Widget>[
                                 TextButton(
-                                    child: Text('Add'),
+                                    child: Text('Save'),
                                     onPressed: () {
                                       
                                     }),

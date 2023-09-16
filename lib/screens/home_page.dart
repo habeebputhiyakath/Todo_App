@@ -14,19 +14,19 @@ class Homepage extends StatefulWidget {
   State<Homepage> createState() => _HomepageState();
 }
 class _HomepageState extends State<Homepage> {
+  final _formKey = GlobalKey<FormState>();
   final _myBox = Hive.box('Mybox');
   @override
-  void initState() {
-    super.initState();
-    _initializeTasks();
-  }
-
-  void _initializeTasks() {
-    for (var i = 0; i < _myBox.length; i++) {
-      final task = _myBox.getAt(i);
-      todolist.add([task['taskName'], task['taskComplete']]);
-    }
-  }
+  // void initState() {
+  //   super.initState();
+  //   _initializeTasks();
+  // }
+  // void _initializeTasks() {
+  //   for (var i = 0; i < _myBox.length; i++) {
+  //     final task = _myBox.getAt(i);
+  //     todolist.add([task['taskName'], task['taskComplete']]);
+  //   }
+  // }
 List todolist = [];
 bool isChecked = false;
   final dialogueController = TextEditingController();
@@ -44,6 +44,7 @@ bool isChecked = false;
   @override
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
+    
 
     return Scaffold(
       appBar: AppBar(
@@ -61,9 +62,9 @@ bool isChecked = false;
                 decoration: BoxDecoration(
                    boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.50),
-                      spreadRadius: 5,
-                      blurRadius: 10,
+                      color: Colors.black.withOpacity(0.40),
+                      spreadRadius: 2,
+                      blurRadius: 5,
                       offset: Offset(0, 4),
                     ),
                   ],
@@ -265,7 +266,7 @@ bool isChecked = false;
     final taskName = dialogueController.text;
     final taskComplete = false;
 
-    _myBox.add({'taskName': taskName, 'taskComplete': taskComplete});
+    // _myBox.add({'taskName': taskName, 'taskComplete': taskComplete});
 
     dialogueController.clear();
 
@@ -276,7 +277,7 @@ bool isChecked = false;
   }
 
   void deleteTask(int index) {
-    _myBox.deleteAt(index);
+    // _myBox.deleteAt(index);
     setState(() {
       todolist.removeAt(index);
     });
