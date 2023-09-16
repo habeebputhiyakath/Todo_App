@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:todolist/functions/db_functions.dart';
+import 'package:todolist/model/data_model.dart';
 import 'package:todolist/screens/widget_pages/search%20bar.dart';
 import '../theme/theme_manager.dart';
 import 'widget_pages/drawer.dart';
@@ -15,8 +16,8 @@ class Homepage extends StatefulWidget {
 }
 class _HomepageState extends State<Homepage> {
   final _formKey = GlobalKey<FormState>();
-  final _myBox = Hive.box('Mybox');
-  @override
+  // final _myBox = Hive.box('Mybox');
+  // @override
   // void initState() {
   //   super.initState();
   //   _initializeTasks();
@@ -31,9 +32,9 @@ List todolist = [];
 bool isChecked = false;
   final dialogueController = TextEditingController();
   void checkBoxchanged(bool? value, int index) {
-  final task = _myBox.getAt(index);
-  task['taskComplete'] = value ?? false;
-  _myBox.putAt(index, task);
+  // final task = _myBox.getAt(index);
+  // task['taskComplete'] = value ?? false;
+  // _myBox.putAt(index, task);
   setState(() {
     todolist[index][1] = value ?? false;
   });
@@ -155,29 +156,43 @@ bool isChecked = false;
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Add Task'),
-                              content: TextFormField(
-                                controller: dialogueController,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 4, 18, 94)),
-                                )),
+                            return Form(
+                              key: _formKey,
+                              child: AlertDialog(
+                                title: Text('Add Task'),
+                                content: TextFormField(
+                                  validator: (value) {
+                                    if(value==null||value.isEmpty){
+                                      return 'Task is Empty';
+                                    }else{
+                                      return null;
+                                    }
+                                  },
+                                  controller: dialogueController,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                        color: Color.fromARGB(255, 4, 18, 94)),
+                                  )),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                      child: Text('Add'),
+                                      onPressed: () {
+                                        if(_formKey.currentState!.validate()){
+                                        addButtonClickedon(context);
+                                        }else{
+                                          print('data is Empty');
+                                        }
+                                      }),
+                                  TextButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      }),
+                                ],
                               ),
-                              actions: <Widget>[
-                                TextButton(
-                                    child: Text('Add'),
-                                    onPressed: () {
-                                      addTask();
-                                    }),
-                                TextButton(
-                                    child: Text('Cancel'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    }),
-                              ],
                             );
                           },
                         );
@@ -262,13 +277,21 @@ bool isChecked = false;
     );
   }
 
-  void addTask() {
+  Future<void> addButtonClickedon(BuildContext context) async {
     final taskName = dialogueController.text;
     final taskComplete = false;
 
     // _myBox.add({'taskName': taskName, 'taskComplete': taskComplete});
 
     dialogueController.clear();
+    if(taskName.isEmpty){
+    return;
+  }else{
+    TaskModel tasks=TaskModel(taskName: taskName,tasComplete: false);
+    setState(() {
+      addTask(tasks);
+    });
+  }
 
     Navigator.of(context).pop();
     setState(() {
@@ -282,5 +305,11 @@ bool isChecked = false;
       todolist.removeAt(index);
     });
   }
+  
+//  Future <void> addButtonClickedon(BuildContext context)async{
+//   final taskName=dialogueController.text.trim();
+  
+    
+//   }
 }
 
