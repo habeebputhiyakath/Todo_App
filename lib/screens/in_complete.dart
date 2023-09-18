@@ -1,11 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:todolist/model/data_model.dart';
+import 'package:todolist/screens/widget_pages/todolist.dart';
 
 import '../theme/theme_manager.dart';
 
-class UnComplete extends StatelessWidget {
+class UnComplete extends StatefulWidget {
   const UnComplete({super.key});
 
+  @override
+  State<UnComplete> createState() => _UnCompleteState();
+}
+
+class _UnCompleteState extends State<UnComplete> {
+  List<TaskModel> completedTasks = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeCompletedTasks();
+  }
+
+  void _initializeCompletedTasks() {
+    final myBox = Hive.box('Mybox');
+
+    for (var i = 0; i < myBox.length; i++) {
+      final task = myBox.getAt(i);
+      final taskCompleted = task['taskComplete'];
+      if (taskCompleted == false) {
+        setState(() {
+          completedTasks.add(TaskModel(
+            taskName: task['taskName'],
+            tasComplete: taskCompleted,
+          ));
+        });
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
@@ -40,7 +72,7 @@ class UnComplete extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(13.0),
+                padding: const EdgeInsets.only(left: 10,right: 10,top: 10),
                 child: Container(
                   width: double.infinity,
                   height: 40,
@@ -64,11 +96,27 @@ class UnComplete extends StatelessWidget {
                 ),
               ),
                 ),
-              )
+              ),
+              Expanded(
+            child: ListView.builder(
+              itemCount: completedTasks.length,
+              itemBuilder: (context, index) {
+                final taskModel = completedTasks[index];
+          
+                return toDolist(
+                  taskName: taskModel.taskName,
+                  tasComplete: taskModel.tasComplete,
+                  onChanged: null,
+                  deleteFunction: null
+                );
+              },
+            ),
+          ),
         ],
       )
     );
   }
+
   Positioned _completedIcons(double left,double top, IconData icon,double iconSize,Color color) {
     return Positioned(
                     left: left,

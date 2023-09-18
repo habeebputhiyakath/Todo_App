@@ -44,14 +44,20 @@ bool isChecked = false;
     todolist[index][1] = value ?? false;
   });
 }
+  void searchTasks(String query) {
+  setState(() {
+    todolist = todolist.where((task) {
+      final taskName = task[0].toString().toLowerCase();
+      return taskName.contains(query.toLowerCase());
+    }).toList();
+  });
+}
 
 
 
   @override
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
-    
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -82,7 +88,9 @@ bool isChecked = false;
                 ),
                 child: Stack(
                   children: [
-                    Positioned(left: 10, child: AnimatedSearchBar()),
+                    Positioned(left: 10, child: AnimatedSearchBar(searchCallback: searchTasks,)
+
+),
                   ],
                 ),
               ),
@@ -288,5 +296,7 @@ bool isChecked = false;
       todolist.removeAt(index);
     });
   }
+ 
+
 }
 

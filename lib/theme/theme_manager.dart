@@ -34,6 +34,9 @@ class ThemeManager extends ChangeNotifier {
   Color get smileyColors => _currentThemeType == ThemeType.dark
       ? Color.fromARGB(255, 37, 37, 37)
       : Color.fromARGB(255, 1, 91, 107);
+  Color get completedPageColors => _currentThemeType == ThemeType.dark
+      ? Color.fromARGB(255, 19, 18, 18)
+      : Color.fromARGB(255, 223, 248, 236);
 
   void toggleTheme() {
     if (_currentThemeType == ThemeType.light) {
