@@ -1,59 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:todolist/functions/db_functions.dart';
+import 'package:todolist/model/data_model.dart';
+import 'package:todolist/screens/widget_pages/checkbox_change.dart';
+import 'package:todolist/screens/widget_pages/drawer.dart';
 import 'package:todolist/screens/widget_pages/search%20bar.dart';
-import '../theme/theme_manager.dart';
-import 'widget_pages/drawer.dart';
-import 'widget_pages/todolist.dart';
+import 'package:todolist/theme/theme_manager.dart';
 
-class Homepage extends StatefulWidget {
-  final taskName;
-  final taskCompleted;
-  Homepage({
-    super.key,
-    required this.taskName,
-    required this.taskCompleted,
-  });
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
-  get todolist => null;
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<HomePage> createState() => _HomePageState();
 }
-class _HomepageState extends State<Homepage> {
-  final _formKey = GlobalKey<FormState>();
-  final _myBox = Hive.box('Mybox');
+
+class _HomePageState extends State<HomePage> {
+  TextEditingController _taskController = TextEditingController();
+  List<TaskModel> todolist = [];
   @override
   void initState() {
     super.initState();
-    _initializeTasks();
+    final taskDb = Hive.box<TaskModel>('task_db');
+    todolist = taskDb.values.toList();
+    taskListNotifier.value = todolist;
   }
-  void _initializeTasks() {
-    for (var i = 0; i < _myBox.length; i++) {
-      final task = _myBox.getAt(i);
-      todolist.add([task['taskName'], task['taskComplete']]);
-    }
+
+  void deleteTask(int index) async {
+    final taskDb = Hive.box<TaskModel>('task_db');
+    await taskDb.deleteAt(index);
   }
-List todolist = [];
-bool isChecked = false;
-  final dialogueController = TextEditingController();
-  void checkBoxchanged(bool? value, int index) {
-  final task = _myBox.getAt(index);
-  task['taskComplete'] = value ?? false;
-  _myBox.putAt(index, task);
-  setState(() {
-    todolist[index][1] = value ?? false;
-  });
-}
-  void searchTasks(String query) {
-  setState(() {
-    todolist = todolist.where((task) {
-      final taskName = task[0].toString().toLowerCase();
-      return taskName.contains(query.toLowerCase());
-    }).toList();
-  });
-}
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +39,9 @@ bool isChecked = false;
       appBar: AppBar(
         elevation: 0,
         backgroundColor: themeManager.primaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(0)),
+        ),
       ),
       endDrawer: draWer(),
       body: Column(
@@ -72,7 +52,7 @@ bool isChecked = false;
                 width: double.infinity,
                 height: 220,
                 decoration: BoxDecoration(
-                   boxShadow: [
+                  boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.40),
                       spreadRadius: 2,
@@ -88,9 +68,7 @@ bool isChecked = false;
                 ),
                 child: Stack(
                   children: [
-                    Positioned(left: 10, child: AnimatedSearchBar(searchCallback: searchTasks,)
-
-),
+                    Positioned(left: 10, child: AnimatedSearchBar()),
                   ],
                 ),
               ),
@@ -102,18 +80,12 @@ bool isChecked = false;
                   height: 110,
                   alignment: Alignment.centerLeft,
                   decoration: BoxDecoration(
-                    boxShadow: [
-                      shadow(5, 1)
-                    ],
                       color: themeManager.pictureContainer,
                       borderRadius: BorderRadius.circular(70)),
                   child: Row(
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          boxShadow: [
-                            shadow(5,3)
-                          ],
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: Color.fromARGB(255, 185, 184, 184),
@@ -172,7 +144,7 @@ bool isChecked = false;
                             return AlertDialog(
                               title: Text('Add Task'),
                               content: TextFormField(
-                                controller: dialogueController,
+                                controller: _taskController,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
@@ -184,7 +156,10 @@ bool isChecked = false;
                                 TextButton(
                                     child: Text('Add'),
                                     onPressed: () {
-                                      addTask();
+                                      setState(() {
+                                        saveTask();
+                                      });
+                                      Navigator.of(context).pop();
                                     }),
                                 TextButton(
                                     child: Text('Cancel'),
@@ -207,13 +182,45 @@ bool isChecked = false;
             child: ListView.builder(
               itemCount: todolist.length,
               itemBuilder: (context, index) {
-                return toDolist(
-                  taskName: todolist[index][0],
-                  tasComplete: todolist[index][1],
-                  onChanged: (value) => checkBoxchanged(value, index),
-                  deleteFunction: (context) {
-                    deleteTask(index);
-                  },
+                final data = todolist[index];
+                return Container(
+                  width: 200,
+                  height: 100,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      elevation: 4,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: ListTile(
+                          title: Text(
+                            data.taskName,
+                            style: TextStyle(),
+                          ),
+                          leading: CustomCheckbox(
+                            value: data.tasComplete,
+                            onChanged: (newvalue) {
+                              checkBoxchanged(newvalue, index);
+                              setState(() {
+                                todolist[index];
+                              });
+                            },
+                          ),
+                          trailing: InkWell(
+                              onTap: () {
+                                deleteTask(index);
+                                setState(() {
+                                  todolist.removeAt(index);
+                                });
+                              },
+                              child: Icon(Icons.delete)),
+                        ),
+                      ),
+                    ),
+                  ),
                 );
               },
             ),
@@ -223,80 +230,19 @@ bool isChecked = false;
     );
   }
 
-  BoxShadow shadow(double blurRadius,double spreadRadius) {
-    return BoxShadow(
-                            blurRadius: blurRadius,
-                            spreadRadius: spreadRadius,
-                            color: Color.fromARGB(255, 8, 8, 8).withOpacity(0.30),
-                            offset: Offset(0, 7),
-                            
-                          );
+  Future<void> saveTask() async {
+    final _task = _taskController.text.trim();
+    final task = TaskModel(taskName: _task, tasComplete: false);
+    await addtask(task);
   }
 
-  Positioned _positionedContainer1(
-      double top, String image1, String text1, Color color, double width) {
-    return Positioned(
-        left: 20,
-        top: top,
-        child: Container(
-          width: width,
-          height: 25,
-          child: Row(
-            children: [
-              SizedBox(
-                width: 3,
-              ),
-              Image.asset(
-                image1,
-                height: 20,
-              ),
-              Text(
-                text1,
-                style: TextStyle(fontWeight: FontWeight.w600),
-              ),
-            ],
-          ),
-          decoration: BoxDecoration(
-              color: color, borderRadius: BorderRadius.circular(20)),
-        ));
+  void checkBoxchanged(bool? value, int index) async {
+    final taskDb = Hive.box<TaskModel>('task_db');
+    final task = taskDb.getAt(index);
+
+    if (task != null) {
+      task.tasComplete = value ?? false;
+      await taskDb.putAt(index, task);
+    }
   }
-
-  Positioned _positionedContainer(double top, double left) {
-    return Positioned(
-      top: top,
-      left: left,
-      child: Container(
-        height: 15,
-        width: 130,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.indigo,
-        ),
-      ),
-    );
-  }
-
-  void addTask() {
-    final taskName = dialogueController.text;
-    final taskComplete = false;
-
-    _myBox.add({'taskName': taskName, 'taskComplete': taskComplete});
-
-    dialogueController.clear();
-
-    Navigator.of(context).pop();
-    setState(() {
-      todolist.add([taskName, taskComplete]);
-    });
-  }
-
-  void deleteTask(int index) {
-    _myBox.deleteAt(index);
-    setState(() {
-      todolist.removeAt(index);
-    });
-  }
- 
-
 }
-

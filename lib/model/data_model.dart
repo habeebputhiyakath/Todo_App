@@ -4,9 +4,9 @@ part 'data_model.g.dart';
 @HiveType(typeId: 1)
 class TaskModel  {
   @HiveField(0)
-  final String taskName;
+  late String taskName;
   @HiveField(1)
-  final bool tasComplete;
+  late bool tasComplete;
 
   TaskModel({
     required this.taskName,

@@ -20,13 +20,13 @@ class _BottomNavigationState extends State<BottomNavigation> {
   int selectIndex = 0;
   
   static List widgetOptions = [
-    Homepage(taskName: null,taskCompleted: null),
+    HomePage(),
     Completed(),
     UnComplete(),
     Chart(),
   ];
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = Homepage(taskName: null,taskCompleted: null);
+  Widget currentScreen = HomePage();
   
   
   @override
@@ -49,7 +49,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               MaterialButton(
                 onPressed: () {
                   setState(() {
-                    currentScreen = Homepage(taskName: null,taskCompleted: null);
+                    currentScreen = HomePage();
                     selectIndex = 0;
                   });
                 },

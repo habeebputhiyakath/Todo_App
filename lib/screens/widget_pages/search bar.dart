@@ -4,9 +4,9 @@ import 'package:provider/provider.dart';
 import '../../theme/theme_manager.dart';
 
 class AnimatedSearchBar extends StatefulWidget {
-  final Function(String) searchCallback; 
+ 
 
-  AnimatedSearchBar({required this.searchCallback});
+  AnimatedSearchBar();
   @override
   _AnimatedSearchBarState createState() => _AnimatedSearchBarState();
 }
@@ -39,7 +39,7 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
                 _isSearching = !_isSearching;
                 if (!_isSearching) {
                   _controller.clear();
-                   widget.searchCallback('');
+                  //  widget.searchCallback('');
                 }
               });
             },
@@ -49,7 +49,7 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
             ? TextField(
                 controller: _controller,
                 onChanged: (query) {
-                  widget.searchCallback(query);
+                  // widget.searchCallback(query);
                 },
                 decoration: InputDecoration(
                   hintText: 'Search...',

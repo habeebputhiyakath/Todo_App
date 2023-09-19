@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:todolist/functions/db_functions.dart';
 import 'package:todolist/model/data_model.dart';
 import 'bottom_bar.dart';
 import 'theme/theme_manager.dart';
 
-void main()async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  // if (!Hive.isAdapterRegistered(TaskModelAdapter().typeId)) {
-  //   Hive.registerAdapter(TaskModelAdapter());
-  // }
-  await Hive.openBox('Mybox');
+  if (!Hive.isAdapterRegistered(TaskModelAdapter().typeId)) {
+    Hive.registerAdapter(TaskModelAdapter());
+  }
+
+  final taskDb = await Hive.openBox<TaskModel>('task_db');
+  taskListNotifier.value = taskDb.values.toList();
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeManager(),
       child: const MyApp(),
-    ), 
+    ),
   );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -16,28 +16,28 @@ class Completed extends StatefulWidget {
 class _CompletedState extends State<Completed> {
   List<TaskModel> completedTasks = [];
 
-  @override
-  void initState() {
-    super.initState();
-    _initializeCompletedTasks();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _initializeCompletedTasks();
+  // }
 
-  void _initializeCompletedTasks() {
-    final myBox = Hive.box('Mybox');
+  // void _initializeCompletedTasks() {
+  //   final myBox = Hive.box('Mybox');
 
-    for (var i = 0; i < myBox.length; i++) {
-      final task = myBox.getAt(i);
-      final taskCompleted = task['taskComplete'];
-      if (taskCompleted == true) {
-        setState(() {
-          completedTasks.add(TaskModel(
-            taskName: task['taskName'],
-            tasComplete: taskCompleted,
-          ));
-        });
-      }
-    }
-  }
+  //   for (var i = 0; i < myBox.length; i++) {
+  //     final task = myBox.getAt(i);
+  //     final taskCompleted = task['taskComplete'];
+  //     if (taskCompleted == true) {
+  //       setState(() {
+  //         completedTasks.add(TaskModel(
+  //           taskName: task['taskName'],
+  //           tasComplete: taskCompleted,
+  //         ));
+  //       });
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -106,16 +106,16 @@ class _CompletedState extends State<Completed> {
               itemBuilder: (context, index) {
                 final taskModel = completedTasks[index];
           
-                return toDolist(
-                  taskName: taskModel.taskName,
-                  tasComplete: taskModel.tasComplete,
-                  onChanged: (value) {
-                    return null;
-                  },
-                  deleteFunction: (context) {
-                    return null;
-                  },
-                );
+                // return toDolist(
+                //   taskName: taskModel.taskName,
+                //   tasComplete: taskModel.tasComplete,
+                //   onChanged: (value) {
+                //     return null;
+                //   },
+                //   deleteFunction: (context) {
+                //     return null;
+                //   },
+                // );
               },
             ),
           ),
