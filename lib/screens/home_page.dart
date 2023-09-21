@@ -19,17 +19,28 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   TextEditingController _taskController = TextEditingController();
   List<TaskModel> todolist = [];
+  List<TaskModel> filteredTasks = [];
   @override
   void initState() {
     super.initState();
     final taskDb = Hive.box<TaskModel>('task_db');
     todolist = taskDb.values.toList();
     taskListNotifier.value = todolist;
+    filteredTasks = todolist;
+    
   }
 
-  void deleteTask(int index) async {
-    final taskDb = Hive.box<TaskModel>('task_db');
-    await taskDb.deleteAt(index);
+  void filterTasks(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        filteredTasks = todolist;
+      } else {
+        filteredTasks = todolist
+            .where((task) =>
+                task.taskName.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      }
+    });
   }
 
   @override
@@ -68,7 +79,11 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: Stack(
                   children: [
-                    Positioned(left: 10, child: AnimatedSearchBar()),
+                    Positioned(
+                        left: 10,
+                        child: AnimatedSearchBar(
+                          onQueryChanged: filterTasks,
+                        )),
                   ],
                 ),
               ),
@@ -80,12 +95,28 @@ class _HomePageState extends State<HomePage> {
                   height: 110,
                   alignment: Alignment.centerLeft,
                   decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.40),
+                          spreadRadius: 1,
+                          blurRadius: 5,
+                          offset: Offset(0, 10),
+                        ),
+                      ],
                       color: themeManager.pictureContainer,
                       borderRadius: BorderRadius.circular(70)),
                   child: Row(
                     children: [
                       Container(
                         decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.40),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: Offset(0, 4),
+                            ),
+                          ],
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: Color.fromARGB(255, 185, 184, 184),
@@ -178,53 +209,71 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: todolist.length,
-              itemBuilder: (context, index) {
-                final data = todolist[index];
-                return Container(
-                  width: 200,
-                  height: 100,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+          Builder(
+            builder: (context) {
+              return ValueListenableBuilder(
+                  valueListenable: taskListNotifier,
+                  builder: (BuildContext ctx, List<TaskModel> studentList,
+                      Widget? child) {
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: filteredTasks.length,
+                        itemBuilder: (context, index) {
+                          final data = filteredTasks[index];
+                          return Container(
+                            width: 200,
+                            height: 100,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                elevation: 4,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: ListTile(
+                                    title: Text(
+                                      data.taskName,
+                                      
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w500,
+                                        decoration: data.tasComplete
+                                            ? TextDecoration
+                                                .lineThrough 
+                                            : TextDecoration.none,
+                                      ),
+                                    ),
+                                    leading: CustomCheckbox(
+                                      value: data.tasComplete,
+                                      onChanged: (newvalue) {
+                                        setState(() {
+                                          checkBoxchanged(newvalue, index);
+                                          todolist[index];
+                                        });
+                                        
+                                      },
+                                    ),
+                                    trailing: InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            deleteTask(index);
+                                            todolist.removeAt(index);
+                                          });
+                                        },
+                                        child: Icon(Icons.delete)),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                      elevation: 4,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: ListTile(
-                          title: Text(
-                            data.taskName,
-                            style: TextStyle(),
-                          ),
-                          leading: CustomCheckbox(
-                            value: data.tasComplete,
-                            onChanged: (newvalue) {
-                              checkBoxchanged(newvalue, index);
-                              setState(() {
-                                todolist[index];
-                              });
-                            },
-                          ),
-                          trailing: InkWell(
-                              onTap: () {
-                                deleteTask(index);
-                                setState(() {
-                                  todolist.removeAt(index);
-                                });
-                              },
-                              child: Icon(Icons.delete)),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
+                    );
+                  });
+            },
+          )
         ],
       ),
     );
@@ -234,12 +283,12 @@ class _HomePageState extends State<HomePage> {
     final _task = _taskController.text.trim();
     final task = TaskModel(taskName: _task, tasComplete: false);
     await addtask(task);
+    _taskController.clear();
   }
 
   void checkBoxchanged(bool? value, int index) async {
     final taskDb = Hive.box<TaskModel>('task_db');
     final task = taskDb.getAt(index);
-
     if (task != null) {
       task.tasComplete = value ?? false;
       await taskDb.putAt(index, task);
