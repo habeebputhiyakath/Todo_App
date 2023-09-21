@@ -124,8 +124,7 @@ class _UnCompleteState extends State<UnComplete> {
                                     setState(() {
                                       deleteTask(index);
                                     });
-                                      incompleteTasks.removeAt(index); 
-                                    
+                                      incompleteTasks.removeAt(index);                                    
                                   },
                                   child: Icon(Icons.delete)),
                             ),

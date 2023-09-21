@@ -20,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   TextEditingController _taskController = TextEditingController();
   List<TaskModel> todolist = [];
   List<TaskModel> filteredTasks = [];
+  final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -27,7 +28,6 @@ class _HomePageState extends State<HomePage> {
     todolist = taskDb.values.toList();
     taskListNotifier.value = todolist;
     filteredTasks = todolist;
-    
   }
 
   void filterTasks(String query) {
@@ -172,32 +172,45 @@ class _HomePageState extends State<HomePage> {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Add Task'),
-                              content: TextFormField(
-                                controller: _taskController,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 4, 18, 94)),
-                                )),
+                            return Form(
+                              key: _formKey,
+                              child: AlertDialog(
+                                title: Text('Add Task'),
+                                content: TextFormField(
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Task is Empty';
+                                    }
+                                    return null;
+                                  },
+                                  controller: _taskController,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                        color: Color.fromARGB(255, 4, 18, 94)),
+                                  )),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                      child: Text('Add'),
+                                      onPressed: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          setState(() {
+                                            saveTask();
+                                          });
+                                        Navigator.of(context).pop();
+                                        } 
+                                          print('Data is Empty');
+                                        
+                                      }),
+                                  TextButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      }),
+                                ],
                               ),
-                              actions: <Widget>[
-                                TextButton(
-                                    child: Text('Add'),
-                                    onPressed: () {
-                                      setState(() {
-                                        saveTask();
-                                      });
-                                      Navigator.of(context).pop();
-                                    }),
-                                TextButton(
-                                    child: Text('Cancel'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    }),
-                              ],
                             );
                           },
                         );
@@ -235,13 +248,11 @@ class _HomePageState extends State<HomePage> {
                                   child: ListTile(
                                     title: Text(
                                       data.taskName,
-                                      
                                       style: TextStyle(
                                         fontSize: 17,
                                         fontWeight: FontWeight.w500,
                                         decoration: data.tasComplete
-                                            ? TextDecoration
-                                                .lineThrough 
+                                            ? TextDecoration.lineThrough
                                             : TextDecoration.none,
                                       ),
                                     ),
@@ -252,7 +263,6 @@ class _HomePageState extends State<HomePage> {
                                           checkBoxchanged(newvalue, index);
                                           todolist[index];
                                         });
-                                        
                                       },
                                     ),
                                     trailing: InkWell(
