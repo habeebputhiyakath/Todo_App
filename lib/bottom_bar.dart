@@ -20,13 +20,13 @@ class _BottomNavigationState extends State<BottomNavigation> {
   int selectIndex = 0;
   
   static List widgetOptions = [
-    HomePage(),
+    const HomePage(),
     Completed(),
-    UnComplete(),
-    Chart(),
+    const UnComplete(),
+    const Chart(),
   ];
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = HomePage();
+  Widget currentScreen = const HomePage();
   
   
   @override
@@ -41,7 +41,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
       bottomNavigationBar: BottomAppBar(
         color: themeManager.primaryColor,
         notchMargin: 10,
-        child: Container(
+        child: SizedBox(
           height: 74,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,7 +49,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               MaterialButton(
                 onPressed: () {
                   setState(() {
-                    currentScreen = HomePage();
+                    currentScreen = const HomePage();
                     selectIndex = 0;
                   });
                 },
@@ -77,7 +77,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               MaterialButton(
                 onPressed: () {
                   setState(() {
-                    currentScreen = Completed();
+                    currentScreen =  Completed();
                     selectIndex = 1;
                   });
                 },
@@ -106,8 +106,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               MaterialButton(
                 onPressed: () {
                   setState(() {
-                    currentScreen = UnComplete();
-                    ;
+                    currentScreen = const UnComplete();
                     selectIndex = 2;
                   });
                 },
@@ -135,7 +134,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               MaterialButton(
                 onPressed: () {
                   setState(() {
-                    currentScreen = Chart();
+                    currentScreen = const Chart();
                     selectIndex = 3;
                   });
                 },

@@ -265,14 +265,27 @@ class _HomePageState extends State<HomePage> {
                                         });
                                       },
                                     ),
-                                    trailing: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            deleteTask(index);
-                                            todolist.removeAt(index);
-                                          });
-                                        },
-                                        child: Icon(Icons.delete)),
+                                    trailing: Row(
+                                       mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        InkWell(
+                                            onTap: () {
+                                              AlertDialog(
+                                                title: Text('Are you sure you want to delete this task..?'),
+                                              );
+                                                _showDeleteConfirmationDialog(context,index);
+                                            },
+                                            child: Icon(Icons.edit)),
+                                        InkWell(
+                                            onTap: () {
+                                              AlertDialog(
+                                                title: Text('Are you sure you want to delete this task..?'),
+                                              );
+                                                _showDeleteConfirmationDialog(context,index);
+                                            },
+                                            child: Icon(Icons.delete)),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -304,4 +317,33 @@ class _HomePageState extends State<HomePage> {
       await taskDb.putAt(index, task);
     }
   }
+  void _showDeleteConfirmationDialog(BuildContext context, int index) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Are you sure you want to delete this task?'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Delete'),
+            onPressed: () {
+              setState(() {
+              deleteTask(index);
+              todolist.removeAt(index);
+              Navigator.of(context).pop();
+              });
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 }

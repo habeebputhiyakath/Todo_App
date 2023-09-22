@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 enum ThemeType { light, dark }
 
@@ -8,6 +9,9 @@ class ThemeManager extends ChangeNotifier {
 
   ThemeData get currentTheme => _currentTheme;
   ThemeType get currentThemeType => _currentThemeType;
+
+  static const String themeBoxName = 'theme_box';
+  static const String selectedThemeKey = 'selected_theme';
 
   Color get primaryColor => _currentThemeType == ThemeType.dark
       ? Color.fromARGB(255, 0, 0, 0)
@@ -38,20 +42,42 @@ class ThemeManager extends ChangeNotifier {
       ? Color.fromARGB(255, 19, 18, 18)
       : Color.fromARGB(255, 223, 248, 236);
   Color get completedTaskColors => _currentThemeType == ThemeType.dark
-      ? Color.fromARGB(255, 42, 75, 27)
+      ? Color.fromARGB(255, 27, 82, 2)
       : Colors.green[100]!;
   Color get incompletedTaskColors => _currentThemeType == ThemeType.dark
-      ? Color.fromARGB(255, 88, 1, 1)
+      ? Color.fromARGB(255, 90, 4, 4)
       : Colors.red[100]!;
 
-  void toggleTheme() {
-    if (_currentThemeType == ThemeType.light) {
-      _currentTheme = ThemeData.dark();
-      _currentThemeType = ThemeType.dark;
-    } else {
-      _currentTheme = ThemeData.light();
-      _currentThemeType = ThemeType.light;
-    }
-    notifyListeners();
+void toggleTheme() async {
+  if (_currentThemeType == ThemeType.light) {
+    _currentTheme = ThemeData.dark();
+    _currentThemeType = ThemeType.dark;
+  } else {
+    _currentTheme = ThemeData.light();
+    _currentThemeType = ThemeType.light;
   }
+  final themeBox = await Hive.openBox(themeBoxName);
+  themeBox.put(selectedThemeKey, _currentThemeType.toString());
+
+  notifyListeners();
+}
+Future<void> initializeTheme() async {
+  final themeBox = await Hive.openBox(themeBoxName);
+  final selectedTheme = themeBox.get(selectedThemeKey);
+
+  if (selectedTheme == null) {
+    _currentThemeType = ThemeType.light;
+  } else {
+    _currentThemeType = ThemeType.values
+        .firstWhere((type) => type.toString() == selectedTheme);
+  }
+  if (_currentThemeType == ThemeType.light) {
+    _currentTheme = ThemeData.light();
+  } else {
+    _currentTheme = ThemeData.dark();
+  }
+
+  notifyListeners();
+}
+
 }

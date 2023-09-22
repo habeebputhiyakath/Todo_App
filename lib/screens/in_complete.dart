@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:todolist/functions/db_functions.dart';
 import 'package:todolist/model/data_model.dart';
 import 'package:todolist/screens/widget_pages/checkbox_change.dart';
-import 'package:todolist/screens/widget_pages/todolist.dart';
 
 import '../theme/theme_manager.dart';
 
@@ -112,21 +110,21 @@ class _UnCompleteState extends State<UnComplete> {
                               leading: CustomCheckbox(
                                 value: data.tasComplete,
                                 onChanged: (newvalue) {
-                                  if (newvalue==false) {
+                                  if (newvalue!=true) {
                                     setState(() {
                                       addtask(data);
                                     });
                                   }
                                 },
                               ),
-                              trailing: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      deleteTask(index);
-                                    });
-                                      incompleteTasks.removeAt(index);                                    
-                                  },
-                                  child: Icon(Icons.delete)),
+                              // trailing: InkWell(
+                              //     onTap: () {
+                              //       setState(() {
+                              //         deleteTaskincompleted(index);
+                              //       });
+                              //         incompleteTasks.removeAt(index);                                    
+                              //     },
+                              //     child: Icon(Icons.delete)),
                             ),
                           ),
                         ),

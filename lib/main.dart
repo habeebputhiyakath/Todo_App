@@ -16,26 +16,28 @@ void main() async {
   final taskDb = await Hive.openBox<TaskModel>('task_db');
   taskListNotifier.value = taskDb.values.toList();
 
+  final themeManager = ThemeManager();
+  await themeManager.initializeTheme();
+
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeManager(),
+    ChangeNotifierProvider.value(
+      value: themeManager,
       child: const MyApp(),
     ),
   );
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeManager = Provider.of<ThemeManager>(context); 
+    final themeManager = Provider.of<ThemeManager>(context);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: BottomNavigation(),
-      theme: themeManager.currentTheme, 
+      theme: themeManager.currentTheme,
       darkTheme: ThemeData.dark(),
       themeMode: themeManager.currentThemeType == ThemeType.dark
           ? ThemeMode.dark

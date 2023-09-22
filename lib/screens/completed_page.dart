@@ -115,14 +115,14 @@ class _CompletedState extends State<Completed> {
                                 }
                                   },
                                 ),
-                                trailing: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        deleteTask(index);
-                                      });
-                                        completedTasks.removeAt(index);
-                                    },
-                                    child: Icon(Icons.delete)),
+                                // trailing: InkWell(
+                                //     onTap: () {
+                                //       setState(() {
+                                //         deleteTask(index);
+                                //       });
+                                //         completedTasks.removeAt(index);
+                                //     },
+                                //     child: Icon(Icons.delete)),
                               ),
                             ),
                           ),
