@@ -16,7 +16,7 @@ class ThemeManager extends ChangeNotifier {
   Color get primaryColor => _currentThemeType == ThemeType.dark
       ? Color.fromARGB(255, 0, 0, 0)
       : Color.fromARGB(255, 1, 59, 70);
-  Color get accentColor => _currentThemeType == ThemeType.dark
+  Color get floatingButtonColor => _currentThemeType == ThemeType.dark
       ? Colors.blueGrey
       : Color.fromARGB(255, 255, 102, 0);
   Color get headingsColor =>
@@ -42,10 +42,10 @@ class ThemeManager extends ChangeNotifier {
       ? Color.fromARGB(255, 19, 18, 18)
       : Color.fromARGB(255, 223, 248, 236);
   Color get completedTaskColors => _currentThemeType == ThemeType.dark
-      ? Color.fromARGB(255, 27, 82, 2)
+      ? Color.fromARGB(255, 14, 43, 1)
       : Colors.green[100]!;
   Color get incompletedTaskColors => _currentThemeType == ThemeType.dark
-      ? Color.fromARGB(255, 90, 4, 4)
+      ? Color.fromARGB(255, 54, 1, 1)
       : Colors.red[100]!;
 
 void toggleTheme() async {

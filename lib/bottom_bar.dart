@@ -21,7 +21,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   
   static List widgetOptions = [
     const HomePage(),
-    Completed(),
+    const Completed(),
     const UnComplete(),
     const Chart(),
   ];

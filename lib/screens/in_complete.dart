@@ -117,14 +117,6 @@ class _UnCompleteState extends State<UnComplete> {
                                   }
                                 },
                               ),
-                              // trailing: InkWell(
-                              //     onTap: () {
-                              //       setState(() {
-                              //         deleteTaskincompleted(index);
-                              //       });
-                              //         incompleteTasks.removeAt(index);                                    
-                              //     },
-                              //     child: Icon(Icons.delete)),
                             ),
                           ),
                         ),

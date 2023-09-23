@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import '../../theme/theme_manager.dart';
 
 class AnimatedSearchBar extends StatefulWidget {
-  final Function(String) onQueryChanged;
-  AnimatedSearchBar({required this.onQueryChanged});
+  final Function(String) onSearch;
+  AnimatedSearchBar({required this.onSearch});
   @override
   _AnimatedSearchBarState createState() => _AnimatedSearchBarState();
 }
@@ -18,7 +18,7 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
     return AnimatedContainer(
-      curve: Curves.bounceIn,
+      curve: Curves.easeIn,
       duration: Duration(milliseconds: 300),
       width: _isSearching ? 390.0 : 48,
       height: 50.0,
@@ -50,8 +50,8 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
             child: _isSearching
                 ? TextField(
                     controller: _controller,
-                    onChanged: (query) {
-                      widget.onQueryChanged(query);
+                    onChanged: (value) {
+                      widget.onSearch(value);
                     },
                     decoration: InputDecoration(
                       hintText: 'Search...',
