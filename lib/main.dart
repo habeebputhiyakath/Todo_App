@@ -12,7 +12,7 @@ void main() async {
   if (!Hive.isAdapterRegistered(TaskModelAdapter().typeId)) {
     Hive.registerAdapter(TaskModelAdapter());
   }
-
+  await Hive.openBox('profile_picture_box');
   final taskDb = await Hive.openBox<TaskModel>('task_db');
   taskListNotifier.value = taskDb.values.toList();
 

@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   List<TaskModel> todolist = [];
   List<TaskModel> filteredTasks = [];
   final _formKey = GlobalKey<FormState>();
+  List<int>? imageBytes;
   File? file;
   ImagePicker image = ImagePicker();
 
@@ -53,6 +54,19 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
+    final storedImageBytes = getStoredImage();
+    final imageWidget = storedImageBytes != null
+        ? Image.memory(
+            storedImageBytes,
+            fit: BoxFit.cover,
+            width: 133,
+            height: 133,
+          )
+        : Icon(
+            Icons.party_mode_outlined,
+            color: Colors.white,
+            size: 40,
+          );
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -96,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                   top: 92,
                   left: 11,
                   child: Container(
-                    width: 390,
+                    width: 370,
                     height: 110,
                     alignment: Alignment.centerLeft,
                     decoration: BoxDecoration(
@@ -132,22 +146,13 @@ class _HomePageState extends State<HomePage> {
                             onTap: () {
                               _addPhotoFunction(context);
                             },
-                            child: CircleAvatar(
-                              radius: 55,
-                              backgroundColor: Color.fromARGB(255, 174, 198, 221),
-                              child: file == null
-                                  ? Icon(
-                                      Icons.party_mode_outlined,color: Colors.white,
-                                      size: 40,
-                                    )
-                                  : ClipOval(
-                                      child: Image.file(
-                                        file!,
-                                        fit: BoxFit.cover,
-                                        width: 133,
-                                        height: 133,
-                                      ),
-                                    ),
+                            child: ClipOval(
+                              child: CircleAvatar(
+                                radius: 55,
+                                backgroundColor:
+                                    Color.fromARGB(255, 174, 198, 221),
+                                child: imageWidget,
+                              ),
                             ),
                           ),
                         ),
@@ -287,54 +292,56 @@ class _HomePageState extends State<HomePage> {
 
   Future<dynamic> _showAddDialogue(BuildContext context) {
     return showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Form(
-                              key: _formKey,
-                              child: AlertDialog(
-                                title: Text('Add Task'),
-                                content: TextFormField(
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Task is Empty';
-                                    }
-                                    return null;
-                                  },
-                                  controller: _taskController,
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(
-                                        color: Color.fromARGB(255, 4, 18, 94)),
-                                  )),
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                      child: Text('Add'),
-                                      onPressed: () {
-                                        if (_formKey.currentState!.validate()) {
-                                          setState(() {
-                                            saveTask();
-                                          });
-                                          Navigator.of(context).pop();
-                                        }
-                                        print('Data is Empty');
-                                      }),
-                                  TextButton(
-                                      child: Text('Cancel'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      }),
-                                ],
-                              ),
-                            );
-                          },
-                        );
+      context: context,
+      builder: (BuildContext context) {
+        return Form(
+          key: _formKey,
+          child: AlertDialog(
+            title: Text('Add Task'),
+            content: TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Task is Empty';
+                }
+                return null;
+              },
+              controller: _taskController,
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: Color.fromARGB(255, 4, 18, 94)),
+              )),
+            ),
+            actions: <Widget>[
+              TextButton(
+                  child: Text('Add'),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() {
+                        saveTask();
+                      });
+                      Navigator.of(context).pop();
+                    }
+                    print('Data is Empty');
+                  }),
+              TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Future<void> saveTask() async {
     final _task = _taskController.text.trim();
-    final task = TaskModel(taskName: _task, tasComplete: false);
+    final task = TaskModel(
+      taskName: _task,
+      tasComplete: false,
+    );
     await addtask(task);
     _taskController.clear();
   }
@@ -438,7 +445,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _addPhotoFunction(BuildContext context) {
+  void _addPhotoFunction(BuildContext context) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -453,15 +460,34 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       FloatingActionButton(
-                          onPressed: () {
-                            getCam(ImageSource.camera);
-                          },
-                          child: Icon(Icons.camera_alt_outlined,
-                              color: Colors.white),
-                          backgroundColor: Colors.red),
+                        onPressed: () async {
+                          final selectedImage =
+                              await image.pickImage(source: ImageSource.camera);
+                          if (selectedImage != null) {
+                            setState(() {
+                              file = File(selectedImage.path);
+                            });
+                            storeImageInHive(file!);
+
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Icon(Icons.camera_alt_outlined,
+                            color: Colors.white),
+                        backgroundColor: Colors.red,
+                      ),
                       FloatingActionButton(
-                        onPressed: () {
-                          getCam(ImageSource.gallery);
+                        onPressed: () async {
+                          final selectedImage = await image.pickImage(
+                              source: ImageSource.gallery);
+                          if (selectedImage != null) {
+                            setState(() {
+                              file = File(selectedImage.path);
+                            });
+                            storeImageInHive(file!);
+
+                            Navigator.of(context).pop();
+                          }
                         },
                         child: Icon(
                           Icons.folder_open_outlined,
@@ -487,5 +513,11 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
+  }
+
+  void storeImageInHive(File imageFile) async {
+    final imageBytes = await imageFile.readAsBytes();
+    final profilePictureBox = Hive.box('profile_picture_box');
+    await profilePictureBox.put('profile_image', imageBytes);
   }
 }

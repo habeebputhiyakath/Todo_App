@@ -108,10 +108,8 @@ class _CompletedState extends State<Completed> {
                                 leading: CustomCheckbox(
                                   value: data.tasComplete,
                                   onChanged: (newvalue) {
-                                    if (newvalue == true) {
-                                    setState(() {
-                                      addtask(data);
-                                    });
+                                    if (newvalue == true) {                                  
+                                      addtask(data);                                  
                                 }
                                   },
                                 ),

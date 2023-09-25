@@ -8,10 +8,13 @@ class TaskModel  {
   late String taskName;
   @HiveField(1)
   late bool tasComplete;
+  
+  
 
   TaskModel({
     required this.taskName,
     required this.tasComplete,
+    
   });
 
  

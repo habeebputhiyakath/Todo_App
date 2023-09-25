@@ -14,7 +14,7 @@ class UnComplete extends StatefulWidget {
 }
 
 class _UnCompleteState extends State<UnComplete> {
-  List<TaskModel> completedTasks = [];
+  List<TaskModel> incompletedTasks = [];
   @override
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
@@ -110,10 +110,8 @@ class _UnCompleteState extends State<UnComplete> {
                               leading: CustomCheckbox(
                                 value: data.tasComplete,
                                 onChanged: (newvalue) {
-                                  if (newvalue!=true) {
-                                    setState(() {
+                                  if (newvalue!=true) {                                  
                                       addtask(data);
-                                    });
                                   }
                                 },
                               ),

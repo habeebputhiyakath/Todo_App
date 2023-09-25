@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todolist/model/data_model.dart';
@@ -26,6 +28,11 @@ Future<void> updateTask(int index, TaskModel updatedTask) async {
   await taskDb.putAt(index, updatedTask);
   taskListNotifier.value[index] = updatedTask;
   taskListNotifier.notifyListeners();
+}
+  Uint8List? getStoredImage() {
+  final profilePictureBox = Hive.box('profile_picture_box');
+  final imageBytes = profilePictureBox.get('profile_image');
+  return imageBytes as Uint8List?;
 }
 
 
