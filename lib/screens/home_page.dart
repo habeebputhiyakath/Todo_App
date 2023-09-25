@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:todolist/functions/db_functions.dart';
 import 'package:todolist/model/data_model.dart';
 import 'package:todolist/screens/widget_pages/checkbox_change.dart';
 import 'package:todolist/screens/widget_pages/drawer.dart';
-import 'package:todolist/screens/widget_pages/search%20bar.dart';
+import 'package:todolist/screens/widget_pages/search_bar.dart';
 import 'package:todolist/theme/theme_manager.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,13 +22,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController _taskController = TextEditingController();
-
+  TextEditingController _dateController = TextEditingController();
   List<TaskModel> todolist = [];
   List<TaskModel> filteredTasks = [];
   final _formKey = GlobalKey<FormState>();
   List<int>? imageBytes;
   File? file;
   ImagePicker image = ImagePicker();
+  DateTime _dateTime = DateTime.now();
 
   @override
   void initState() {
@@ -291,50 +293,96 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<dynamic> _showAddDialogue(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Form(
-          key: _formKey,
-          child: AlertDialog(
-            title: Text('Add Task'),
-            content: TextFormField(
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Task is Empty';
-                }
-                return null;
-              },
-              controller: _taskController,
-              decoration: InputDecoration(
+    _dateTime = DateTime.now();
+    _dateController.text = _formatDate(_dateTime);
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Form(
+        key: _formKey,
+        child: AlertDialog(
+          title: Text('Add Task'),
+          content: Column(
+            children: [
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Task is Empty';
+                  }
+                  return null;
+                },
+                controller: _taskController,
+                decoration: InputDecoration(
+                  hintText:'Task',
                   border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: Color.fromARGB(255, 4, 18, 94)),
-              )),
-            ),
-            actions: <Widget>[
-              TextButton(
-                  child: Text('Add'),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      setState(() {
-                        saveTask();
-                      });
-                      Navigator.of(context).pop();
-                    }
-                    print('Data is Empty');
-                  }),
-              TextButton(
-                  child: Text('Cancel'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  }),
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Color.fromARGB(255, 4, 18, 94)),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [          
+                    Expanded(
+                      child: TextFormField(
+                        controller: _dateController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          hintText: 'Select Date',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Color.fromARGB(255, 4, 18, 94)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20,),
+                    InkWell(
+                      splashColor: Colors.grey,
+                      onTap: () => _showDatePicker(),
+                      child: Icon(Icons.date_range_outlined,size: 20,color: Colors.grey,)),
+        
+                ],
+              ),
+              SizedBox(height: 20,),
+              TextFormField(
+                controller: _taskController,
+                decoration: InputDecoration(
+                  hintText: 'Description (optional)',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Color.fromARGB(255, 4, 18, 94)),
+                  ),
+                ),
+                maxLines: 4,
+              ),
+              SizedBox(height: 20,),
             ],
           ),
-        );
-      },
-    );
-  }
+          actions: <Widget>[
+            TextButton(
+              child: Text('Add'),
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  setState(() {
+                    saveTask();
+                  });
+                  Navigator.of(context).pop();
+                }
+                print('Data is Empty');
+              }),
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              }),
+          ],
+        ),
+      );
+    },
+  );
+}
 
   Future<void> saveTask() async {
     final _task = _taskController.text.trim();
@@ -515,9 +563,25 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void storeImageInHive(File imageFile) async {
-    final imageBytes = await imageFile.readAsBytes();
-    final profilePictureBox = Hive.box('profile_picture_box');
-    await profilePictureBox.put('profile_image', imageBytes);
+  void _showDatePicker() {
+    showDatePicker(
+      context: context, 
+      initialDate: _dateTime, 
+      firstDate: DateTime(2000), 
+      lastDate: DateTime(2040),
+    ).then((value) {
+      if (value != null) {
+        setState(() {
+          _dateTime = value;
+          _dateController.text = _formatDate(value);
+        });
+      }
+    });
+  }
+
+  String _formatDate(DateTime date) {
+    return DateFormat('MM/dd/yyyy').format(date);
   }
 }
+
+

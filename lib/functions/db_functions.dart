@@ -1,5 +1,5 @@
+import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todolist/model/data_model.dart';
@@ -34,5 +34,9 @@ Future<void> updateTask(int index, TaskModel updatedTask) async {
   final imageBytes = profilePictureBox.get('profile_image');
   return imageBytes as Uint8List?;
 }
-
+  void storeImageInHive(File imageFile) async {
+    final imageBytes = await imageFile.readAsBytes();
+    final profilePictureBox = Hive.box('profile_picture_box');
+    await profilePictureBox.put('profile_image', imageBytes);
+}
 
