@@ -18,11 +18,22 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePageState();
+  
 }
+enum FilterCriteria {
+  Daily,
+  Weekly,
+  Monthly,
+  Custom,
+}
+
+FilterCriteria selectedFilter = FilterCriteria.Daily;
+
 
 class _HomePageState extends State<HomePage> {
   TextEditingController _taskController = TextEditingController();
   TextEditingController _dateController = TextEditingController();
+  TextEditingController _discriptController = TextEditingController();
   List<TaskModel> todolist = [];
   List<TaskModel> filteredTasks = [];
   final _formKey = GlobalKey<FormState>();
@@ -30,6 +41,7 @@ class _HomePageState extends State<HomePage> {
   File? file;
   ImagePicker image = ImagePicker();
   DateTime _dateTime = DateTime.now();
+  
 
   @override
   void initState() {
@@ -40,18 +52,41 @@ class _HomePageState extends State<HomePage> {
     filteredTasks = todolist;
   }
 
-  void filterTasks(String search) {
-    setState(() {
-      if (search.isEmpty) {
-        filteredTasks = todolist;
-      } else {
-        filteredTasks = todolist
-            .where((task) =>
-                task.taskName.toLowerCase().contains(search.toLowerCase()))
-            .toList();
-      }
-    });
+void filterTasks(String search) {
+  final filteredBySearch = search.isEmpty
+      ? todolist
+      : todolist
+          .where((task) =>
+              task.taskName.toLowerCase().contains(search.toLowerCase()))
+          .toList();
+
+  final filteredByCriteria = filterTasksByCriteria(filteredBySearch);
+
+  setState(() {
+    filteredTasks = filteredByCriteria;
+  });
+}
+List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {
+  final now = DateTime.now();
+  switch (selectedFilter) {
+    case FilterCriteria.Daily:
+      return tasks.where((task) {
+        final taskDate = task.date;
+        return taskDate.year == now.year &&
+            taskDate.month == now.month &&
+            taskDate.day == now.day;
+      }).toList();
+    case FilterCriteria.Weekly:
+      break;
+    case FilterCriteria.Monthly:
+      break;
+    case FilterCriteria.Custom:
+      break;
   }
+  return tasks;
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -208,6 +243,22 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+            DropdownButton<FilterCriteria>(
+  value: selectedFilter,
+  onChanged: (newValue) {
+    setState(() {
+      selectedFilter = newValue!;
+      filterTasks('');
+    });
+  },
+  items: FilterCriteria.values.map((criteria) {
+    return DropdownMenuItem<FilterCriteria>(
+      value: criteria,
+      child: Text(criteria.toString().split('.').last),
+    );
+  }).toList(),
+),
+
             Builder(
               builder: (context) {
                 return ValueListenableBuilder(
@@ -241,6 +292,22 @@ class _HomePageState extends State<HomePage> {
                                               ? TextDecoration.lineThrough
                                               : TextDecoration.none,
                                         ),
+                                      ),
+                                      subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${DateFormat('MM/dd/yyyy').format(data.date)}',
+                                            style: TextStyle(fontSize: 14),
+                                          ),
+                                          if (data.description != null &&
+                                              data.description.isNotEmpty)
+                                            Text(
+                                              '${data.description}',
+                                              style: TextStyle(fontSize: 14),
+                                            ),
+                                        ],
                                       ),
                                       leading: CustomCheckbox(
                                         value: data.tasComplete,
@@ -295,35 +362,38 @@ class _HomePageState extends State<HomePage> {
   Future<dynamic> _showAddDialogue(BuildContext context) {
     _dateTime = DateTime.now();
     _dateController.text = _formatDate(_dateTime);
-  return showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Form(
-        key: _formKey,
-        child: AlertDialog(
-          title: Text('Add Task'),
-          content: Column(
-            children: [
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Task is Empty';
-                  }
-                  return null;
-                },
-                controller: _taskController,
-                decoration: InputDecoration(
-                  hintText:'Task',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Color.fromARGB(255, 4, 18, 94)),
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Form(
+          key: _formKey,
+          child: AlertDialog(
+            title: Text('Add Task'),
+            content: Column(
+              children: [
+                TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Task is Empty';
+                    }
+                    return null;
+                  },
+                  controller: _taskController,
+                  decoration: InputDecoration(
+                    hintText: 'Task',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 4, 18, 94)),
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 20,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [          
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
                     Expanded(
                       child: TextFormField(
                         controller: _dateController,
@@ -332,66 +402,82 @@ class _HomePageState extends State<HomePage> {
                           hintText: 'Select Date',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Color.fromARGB(255, 4, 18, 94)),
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(255, 4, 18, 94)),
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(width: 20,),
+                    SizedBox(
+                      width: 20,
+                    ),
                     InkWell(
-                      splashColor: Colors.grey,
-                      onTap: () => _showDatePicker(),
-                      child: Icon(Icons.date_range_outlined,size: 20,color: Colors.grey,)),
-        
-                ],
-              ),
-              SizedBox(height: 20,),
-              TextFormField(
-                controller: _taskController,
-                decoration: InputDecoration(
-                  hintText: 'Description (optional)',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Color.fromARGB(255, 4, 18, 94)),
-                  ),
+                        splashColor: Colors.grey,
+                        onTap: () => _showDatePicker(),
+                        child: Icon(
+                          Icons.date_range_outlined,
+                          size: 20,
+                          color: Colors.grey,
+                        )),
+                  ],
                 ),
-                maxLines: 4,
-              ),
-              SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  controller: _discriptController,
+                  decoration: InputDecoration(
+                    hintText: 'Description (optional)',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 4, 18, 94)),
+                    ),
+                  ),
+                  maxLines: 4,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                  child: Text('Add'),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() {
+                        saveTask();
+                      });
+                      Navigator.of(context).pop();
+                    }
+                    print('Data is Empty');
+                  }),
+              TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
             ],
           ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Add'),
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  setState(() {
-                    saveTask();
-                  });
-                  Navigator.of(context).pop();
-                }
-                print('Data is Empty');
-              }),
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              }),
-          ],
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
   Future<void> saveTask() async {
     final _task = _taskController.text.trim();
+    final _date = _dateTime;
+    final _descriPtion = _discriptController.text.trim();
     final task = TaskModel(
-      taskName: _task,
-      tasComplete: false,
-    );
+        taskName: _task,
+        tasComplete: false,
+        date: _date,
+        description: _descriPtion);
     await addtask(task);
     _taskController.clear();
+    _dateController.clear();
+    _discriptController.clear();
   }
 
   void checkBoxchanged(bool? value, int index) async {
@@ -437,27 +523,90 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         final String currentTaskName = todolist[index].taskName;
+        final String currentDescription = todolist[index].description;
         _taskController.text = currentTaskName;
+        _discriptController.text = currentDescription;
         return Form(
           key: _formKey,
           child: AlertDialog(
             title: Text('Edit Task'),
-            content: TextFormField(
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Task is Empty';
-                }
-                return null;
-              },
-              controller: _taskController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(
-                    color: Color.fromARGB(255, 4, 18, 94),
+            content: Column(
+              children: [
+                TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Task is Empty';
+                    }
+                    return null;
+                  },
+                  controller: _taskController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 4, 18, 94),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _dateController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Date is Empty';
+                          }
+                          return null;
+                        },
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          hintText: 'Select Date',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(255, 4, 18, 94)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    InkWell(
+                        splashColor: Colors.grey,
+                        onTap: () => _showDatePicker(),
+                        child: Icon(
+                          Icons.date_range_outlined,
+                          size: 20,
+                          color: Colors.grey,
+                        )),
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  controller: _discriptController,
+                  decoration: InputDecoration(
+                    hintText: 'Description (optional)',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 4, 18, 94)),
+                    ),
+                  ),
+                  maxLines: 4,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+              ],
             ),
             actions: <Widget>[
               TextButton(
@@ -465,9 +614,10 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     final updatedTask = TaskModel(
-                      taskName: _taskController.text.trim(),
-                      tasComplete: todolist[index].tasComplete,
-                    );
+                        taskName: _taskController.text.trim(),
+                        tasComplete: todolist[index].tasComplete,
+                        date: _dateTime,
+                        description: _discriptController.text.trim());
                     updateTask(index, updatedTask);
                     Navigator.of(context).pop();
                   }
@@ -565,9 +715,9 @@ class _HomePageState extends State<HomePage> {
 
   void _showDatePicker() {
     showDatePicker(
-      context: context, 
-      initialDate: _dateTime, 
-      firstDate: DateTime(2000), 
+      context: context,
+      initialDate: _dateTime,
+      firstDate: DateTime(2000),
       lastDate: DateTime(2040),
     ).then((value) {
       if (value != null) {
@@ -583,5 +733,3 @@ class _HomePageState extends State<HomePage> {
     return DateFormat('MM/dd/yyyy').format(date);
   }
 }
-
-

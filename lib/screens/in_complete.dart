@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:todolist/functions/db_functions.dart';
 import 'package:todolist/model/data_model.dart';
@@ -107,6 +108,22 @@ class _UnCompleteState extends State<UnComplete> {
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
+                              subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${DateFormat('MM/dd/yyyy').format(data.date)}',
+                                            style: TextStyle(fontSize: 14),
+                                          ),
+                                          if (data.description != null &&
+                                              data.description.isNotEmpty)
+                                            Text(
+                                              '${data.description}',
+                                              style: TextStyle(fontSize: 14),
+                                            ),
+                                        ],
+                                      ),
                               leading: CustomCheckbox(
                                 value: data.tasComplete,
                                 onChanged: (newvalue) {
