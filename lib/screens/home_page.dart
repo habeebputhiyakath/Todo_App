@@ -18,17 +18,16 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePageState();
-  
 }
+
 enum FilterCriteria {
   Daily,
   Weekly,
   Monthly,
-  Custom,
+  Yearly,
 }
 
 FilterCriteria selectedFilter = FilterCriteria.Daily;
-
 
 class _HomePageState extends State<HomePage> {
   TextEditingController _taskController = TextEditingController();
@@ -41,7 +40,6 @@ class _HomePageState extends State<HomePage> {
   File? file;
   ImagePicker image = ImagePicker();
   DateTime _dateTime = DateTime.now();
-  
 
   @override
   void initState() {
@@ -52,20 +50,21 @@ class _HomePageState extends State<HomePage> {
     filteredTasks = todolist;
   }
 
-void filterTasks(String search) {
-  final filteredBySearch = search.isEmpty
-      ? todolist
-      : todolist
-          .where((task) =>
-              task.taskName.toLowerCase().contains(search.toLowerCase()))
-          .toList();
+  void filterTasks(String search) {
+    final filteredBySearch = search.isEmpty
+        ? todolist
+        : todolist
+            .where((task) =>
+                task.taskName.toLowerCase().contains(search.toLowerCase()))
+            .toList();
 
-  final filteredByCriteria = filterTasksByCriteria(filteredBySearch);
+    final filteredByCriteria = filterTasksByCriteria(filteredBySearch);
 
-  setState(() {
-    filteredTasks = filteredByCriteria;
-  });
-}
+    setState(() {
+      filteredTasks = filteredByCriteria;
+    });
+  }
+
 List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {
   final now = DateTime.now();
   switch (selectedFilter) {
@@ -77,15 +76,31 @@ List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {
             taskDate.day == now.day;
       }).toList();
     case FilterCriteria.Weekly:
-      break;
+      final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+      final endOfWeek = startOfWeek.add(Duration(days: 6));
+      return tasks.where((task) {
+        final taskDate = task.date;
+        return taskDate.isAfter(startOfWeek) &&
+            taskDate.isBefore(endOfWeek.add(Duration(days: 1)));
+      }).toList();
     case FilterCriteria.Monthly:
-      break;
-    case FilterCriteria.Custom:
-      break;
+      final startOfMonth = DateTime(now.year, now.month, 1);
+      final endOfMonth = DateTime(now.year, now.month + 1, 0);
+      return tasks.where((task) {
+        final taskDate = task.date;
+        return taskDate.isAfter(startOfMonth) &&
+            taskDate.isBefore(endOfMonth.add(Duration(days: 1)));
+      }).toList();
+    case FilterCriteria.Yearly:
+      final startOfYear = DateTime(now.year, 1, 1);
+      final endOfYear = DateTime(now.year, 12, 31);
+      return tasks.where((task) {
+        final taskDate = task.date;
+        return taskDate.isAfter(startOfYear) &&
+            taskDate.isBefore(endOfYear.add(Duration(days: 1)));
+      }).toList();
   }
-  return tasks;
 }
-
 
 
   @override
@@ -146,62 +161,46 @@ List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {
                 Positioned(
                   top: 92,
                   left: 11,
-                  child: Container(
-                    width: 370,
-                    height: 110,
-                    alignment: Alignment.centerLeft,
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.40),
-                            spreadRadius: 1,
-                            blurRadius: 5,
-                            offset: Offset(0, 10),
-                          ),
-                        ],
-                        color: themeManager.pictureContainer,
-                        borderRadius: BorderRadius.circular(70)),
-                    child: Row(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.40),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Color.fromARGB(255, 185, 184, 184),
-                              width: 1.0,
+                  child: Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.40),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: Offset(0, 4),
                             ),
+                          ],
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Color.fromARGB(255, 185, 184, 184),
+                            width: 1.0,
                           ),
-                          child: GestureDetector(
-                            onTap: () {
-                              _addPhotoFunction(context);
-                            },
-                            child: ClipOval(
-                              child: CircleAvatar(
-                                radius: 55,
-                                backgroundColor:
-                                    Color.fromARGB(255, 174, 198, 221),
-                                child: imageWidget,
-                              ),
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            _addPhotoFunction(context);
+                          },
+                          child: ClipOval(
+                            child: CircleAvatar(
+                              radius: 55,
+                              backgroundColor:
+                                  Color.fromARGB(255, 174, 198, 221),
+                              child: imageWidget,
                             ),
                           ),
                         ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          'Hello',
-                          style: TextStyle(fontSize: 20, color: Colors.white),
-                        )
-                      ],
-                    ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        'Hello',
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      )
+                    ],
                   ),
                 )
               ],
@@ -230,6 +229,21 @@ List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {
                             fontSize: 20,
                             color: Colors.grey),
                       ),
+                      DropdownButton<FilterCriteria>(
+              value: selectedFilter,
+              onChanged: (newValue) {
+                setState(() {
+                  selectedFilter = newValue!;
+                  filterTasks('');
+                });
+              },
+              items: FilterCriteria.values.map((criteria) {
+                return DropdownMenuItem<FilterCriteria>(
+                  value: criteria,
+                  child: Text(criteria.toString().split('.').last),
+                );
+              }).toList(),
+            ),
                       FloatingActionButton(
                         backgroundColor: themeManager.floatingButtonColor,
                         splashColor: Color.fromARGB(255, 240, 189, 48),
@@ -243,22 +257,7 @@ List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {
                 ),
               ),
             ),
-            DropdownButton<FilterCriteria>(
-  value: selectedFilter,
-  onChanged: (newValue) {
-    setState(() {
-      selectedFilter = newValue!;
-      filterTasks('');
-    });
-  },
-  items: FilterCriteria.values.map((criteria) {
-    return DropdownMenuItem<FilterCriteria>(
-      value: criteria,
-      child: Text(criteria.toString().split('.').last),
-    );
-  }).toList(),
-),
-
+            
             Builder(
               builder: (context) {
                 return ValueListenableBuilder(
@@ -311,10 +310,11 @@ List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {
                                       ),
                                       leading: CustomCheckbox(
                                         value: data.tasComplete,
-                                        onChanged: (newvalue) {
+                                        onChanged: (newValue) {
                                           setState(() {
-                                            checkBoxchanged(newvalue, index);
-                                            todolist[index];
+                                            checkBoxchanged(newValue, index);
+                                            data.tasComplete =
+                                                newValue ?? false;
                                           });
                                         },
                                       ),
@@ -526,6 +526,8 @@ List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {
         final String currentDescription = todolist[index].description;
         _taskController.text = currentTaskName;
         _discriptController.text = currentDescription;
+        _dateController.text = DateFormat('MM/dd/yyyy').format(todolist[index].date);
+
         return Form(
           key: _formKey,
           child: AlertDialog(

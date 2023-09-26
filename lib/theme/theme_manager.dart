@@ -20,7 +20,7 @@ class ThemeManager extends ChangeNotifier {
       ? Colors.blueGrey
       : Color.fromARGB(255, 255, 102, 0);
   Color get headingsColor =>
-      _currentThemeType == ThemeType.dark ? Colors.grey[900]! : Color.fromARGB(255, 235, 235, 235);
+      _currentThemeType == ThemeType.dark ? Colors.grey[900]! : Colors.grey[100]!;
   Color get pictureContainer => _currentThemeType == ThemeType.dark
       ? Colors.grey[900]!
       : Color.fromARGB(255, 1, 68, 80);

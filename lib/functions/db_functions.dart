@@ -11,12 +11,14 @@ Future<void> addtask(TaskModel value) async {
   taskListNotifier.value.add(value);
   taskListNotifier.notifyListeners();
 }
-  Future<void> getAlltasks() async {
+Future<List<TaskModel>> getAlltasks() async {
   final taskDb = await Hive.openBox<TaskModel>('task_db');
-  taskListNotifier.value.clear();
-  taskListNotifier.value.addAll(taskDb.values);
+  final tasks = taskDb.values.toList();
+  taskListNotifier.value = tasks;
   taskListNotifier.notifyListeners();
+  return tasks;
 }
+
  Future<void> deleteTask(int index) async {
   final taskDb = await Hive.openBox<TaskModel>('task_db');
   await taskDb.deleteAt(index);

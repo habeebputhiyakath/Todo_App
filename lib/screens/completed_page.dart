@@ -17,6 +17,7 @@ class _CompletedState extends State<Completed> {
   @override
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
+    final currentDate = DateTime.now();
     return Scaffold(
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -79,7 +80,13 @@ class _CompletedState extends State<Completed> {
               valueListenable: taskListNotifier,
               builder:
                   (BuildContext ctx, List<TaskModel> todolist, Widget? child) {
-                    final completedTasks = todolist.where((task) => task.tasComplete).toList();
+                final completedTasks = todolist.where((task) {
+                  return task.tasComplete &&
+                      (currentDate.isBefore(task.date) ||
+                          currentDate.isAtSameMomentAs(task.date) ||
+                          isSameDay(currentDate, task.date));
+                }).toList();
+
                 return Expanded(
                   child: ListView.builder(
                     itemCount: completedTasks.length,
@@ -107,27 +114,26 @@ class _CompletedState extends State<Completed> {
                                   ),
                                 ),
                                 subtitle: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            '${DateFormat('MM/dd/yyyy').format(data.date)}',
-                                            style: TextStyle(fontSize: 14),
-                                          ),
-                                          if (data.description != null &&
-                                              data.description.isNotEmpty)
-                                            Text(
-                                              '${data.description}',
-                                              style: TextStyle(fontSize: 14),
-                                            ),
-                                        ],
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${DateFormat('MM/dd/yyyy').format(data.date)}',
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    if (data.description != null &&
+                                        data.description.isNotEmpty)
+                                      Text(
+                                        '${data.description}',
+                                        style: TextStyle(fontSize: 14),
                                       ),
+                                  ],
+                                ),
                                 leading: CustomCheckbox(
                                   value: data.tasComplete,
                                   onChanged: (newvalue) {
-                                    if (newvalue == true) {                                  
-                                      addtask(data);                                  
-                                }
+                                    if (newvalue == true) {
+                                      addtask(data);
+                                    }
                                   },
                                 ),
                               ),
@@ -145,6 +151,12 @@ class _CompletedState extends State<Completed> {
       ),
     );
   }
+}
+
+bool isSameDay(DateTime date1, DateTime date2) {
+  return date1.year == date2.year &&
+      date1.month == date2.month &&
+      date1.day == date2.day;
 }
 
 Positioned _completedIcons(
