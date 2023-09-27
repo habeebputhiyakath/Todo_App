@@ -27,11 +27,11 @@ class _ChartState extends State<Chart> {
             future: getAlltasks(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(child: Text('No data available.'));
+                return const Center(child: Text('No data available.'));
               } else {
                 int completedTasks =
                     snapshot.data!.where((task) => task.tasComplete).length;
@@ -46,12 +46,11 @@ class _ChartState extends State<Chart> {
                        sections: [
                          PieChartSectionData(
                            value: completedTasks.toDouble(),
-                           title: 'Completed',
                            color: Color.fromARGB(255, 14, 2, 121),
+                           
                          ),
                          PieChartSectionData(
                            value: incompletedTasks.toDouble(),
-                           title: 'Incomplete',
                            color: const Color.fromARGB(255, 54, 206, 244),
                          ),
                        ],
@@ -63,10 +62,11 @@ class _ChartState extends State<Chart> {
                    ),
                               ),
                  );
-
+              
               }
             },
           ),
+          SizedBox(height: 20,),
           chartValues(color: Color.fromARGB(255, 14, 2, 121),text: "Completed Task's"),
           SizedBox(height: 40,),
           chartValues(color: const Color.fromARGB(255, 54, 206, 244),text: "Incomplete Task's")

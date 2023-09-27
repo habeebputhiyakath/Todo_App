@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:todolist/functions/db_functions.dart';
+import 'package:todolist/login_page.dart';
 import 'package:todolist/model/data_model.dart';
 import 'bottom_bar.dart';
 import 'theme/theme_manager.dart';
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: BottomNavigation(),
+      home: LoginPage(),
       theme: themeManager.currentTheme,
       darkTheme: ThemeData.dark(),
       themeMode: themeManager.currentThemeType == ThemeType.dark

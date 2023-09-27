@@ -30,9 +30,9 @@ enum FilterCriteria {
 FilterCriteria selectedFilter = FilterCriteria.Daily;
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController _taskController = TextEditingController();
-  TextEditingController _dateController = TextEditingController();
-  TextEditingController _discriptController = TextEditingController();
+  final TextEditingController _taskController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _discriptController = TextEditingController();
   List<TaskModel> todolist = [];
   List<TaskModel> filteredTasks = [];
   final _formKey = GlobalKey<FormState>();
@@ -65,43 +65,42 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {
-  final now = DateTime.now();
-  switch (selectedFilter) {
-    case FilterCriteria.Daily:
-      return tasks.where((task) {
-        final taskDate = task.date;
-        return taskDate.year == now.year &&
-            taskDate.month == now.month &&
-            taskDate.day == now.day;
-      }).toList();
-    case FilterCriteria.Weekly:
-      final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-      final endOfWeek = startOfWeek.add(Duration(days: 6));
-      return tasks.where((task) {
-        final taskDate = task.date;
-        return taskDate.isAfter(startOfWeek) &&
-            taskDate.isBefore(endOfWeek.add(Duration(days: 1)));
-      }).toList();
-    case FilterCriteria.Monthly:
-      final startOfMonth = DateTime(now.year, now.month, 1);
-      final endOfMonth = DateTime(now.year, now.month + 1, 0);
-      return tasks.where((task) {
-        final taskDate = task.date;
-        return taskDate.isAfter(startOfMonth) &&
-            taskDate.isBefore(endOfMonth.add(Duration(days: 1)));
-      }).toList();
-    case FilterCriteria.Yearly:
-      final startOfYear = DateTime(now.year, 1, 1);
-      final endOfYear = DateTime(now.year, 12, 31);
-      return tasks.where((task) {
-        final taskDate = task.date;
-        return taskDate.isAfter(startOfYear) &&
-            taskDate.isBefore(endOfYear.add(Duration(days: 1)));
-      }).toList();
+  List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {
+    final now = DateTime.now();
+    switch (selectedFilter) {
+      case FilterCriteria.Daily:
+        return tasks.where((task) {
+          final taskDate = task.date;
+          return taskDate.year == now.year &&
+              taskDate.month == now.month &&
+              taskDate.day == now.day;
+        }).toList();
+      case FilterCriteria.Weekly:
+        final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+        final endOfWeek = startOfWeek.add(const Duration(days: 6));
+        return tasks.where((task) {
+          final taskDate = task.date;
+          return taskDate.isAfter(startOfWeek) &&
+              taskDate.isBefore(endOfWeek.add(const Duration(days: 1)));
+        }).toList();
+      case FilterCriteria.Monthly:
+        final startOfMonth = DateTime(now.year, now.month, 1);
+        final endOfMonth = DateTime(now.year, now.month + 1, 0);
+        return tasks.where((task) {
+          final taskDate = task.date;
+          return taskDate.isAfter(startOfMonth) &&
+              taskDate.isBefore(endOfMonth.add(const Duration(days: 1)));
+        }).toList();
+      case FilterCriteria.Yearly:
+        final startOfYear = DateTime(now.year, 1, 1);
+        final endOfYear = DateTime(now.year, 12, 31);
+        return tasks.where((task) {
+          final taskDate = task.date;
+          return taskDate.isAfter(startOfYear) &&
+              taskDate.isBefore(endOfYear.add(const Duration(days: 1)));
+        }).toList();
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -111,10 +110,10 @@ List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {
         ? Image.memory(
             storedImageBytes,
             fit: BoxFit.cover,
-            width: 133,
-            height: 133,
+            width: 50,
+            height: 50,
           )
-        : Icon(
+        : const Icon(
             Icons.party_mode_outlined,
             color: Colors.white,
             size: 40,
@@ -139,73 +138,63 @@ List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {
                         color: Colors.black.withOpacity(0.40),
                         spreadRadius: 2,
                         blurRadius: 5,
-                        offset: Offset(0, 4),
+                        offset: const Offset(0, 4),
                       ),
                     ],
                     color: themeManager.primaryColor,
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(60),
                       bottomRight: Radius.circular(60),
                     ),
                   ),
-                  child: Stack(
-                    children: [
-                      Positioned(
-                          left: 10,
-                          child: AnimatedSearchBar(
-                            onSearch: filterTasks,
-                          )),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 160,left: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.40),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color:const  Color.fromARGB(255, 185, 184, 184),
+                              width: 1.0,
+                            ),
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              _addPhotoFunction(context);
+                            },
+                            child: ClipOval(
+                              child: CircleAvatar(
+                                radius: 25,
+                                backgroundColor:
+                                   const Color.fromARGB(255, 174, 198, 221),
+                                child: imageWidget,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10,),
+                        AnimatedSearchBar(
+                          onSearch: filterTasks,
+                        ),
+                        
+                      ],
+                    
+                    ),
                   ),
                 ),
-                Positioned(
-                  top: 92,
-                  left: 11,
-                  child: Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.40),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: Offset(0, 4),
-                            ),
-                          ],
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Color.fromARGB(255, 185, 184, 184),
-                            width: 1.0,
-                          ),
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            _addPhotoFunction(context);
-                          },
-                          child: ClipOval(
-                            child: CircleAvatar(
-                              radius: 55,
-                              backgroundColor:
-                                  Color.fromARGB(255, 174, 198, 221),
-                              child: imageWidget,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Text(
-                        'Hello',
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      )
-                    ],
-                  ),
-                )
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -222,7 +211,7 @@ List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "All Task's",
                         style: TextStyle(
                             fontWeight: FontWeight.w800,
@@ -230,34 +219,33 @@ List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {
                             color: Colors.grey),
                       ),
                       DropdownButton<FilterCriteria>(
-              value: selectedFilter,
-              onChanged: (newValue) {
-                setState(() {
-                  selectedFilter = newValue!;
-                  filterTasks('');
-                });
-              },
-              items: FilterCriteria.values.map((criteria) {
-                return DropdownMenuItem<FilterCriteria>(
-                  value: criteria,
-                  child: Text(criteria.toString().split('.').last),
-                );
-              }).toList(),
-            ),
+                        value: selectedFilter,
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedFilter = newValue!;
+                            filterTasks('');
+                          });
+                        },
+                        items: FilterCriteria.values.map((criteria) {
+                          return DropdownMenuItem<FilterCriteria>(
+                            value: criteria,
+                            child: Text(criteria.toString().split('.').last),
+                          );
+                        }).toList(),
+                      ),
                       FloatingActionButton(
                         backgroundColor: themeManager.floatingButtonColor,
-                        splashColor: Color.fromARGB(255, 240, 189, 48),
+                        splashColor: const Color.fromARGB(255, 240, 189, 48),
                         onPressed: () {
                           _showAddDialogue(context);
                         },
-                        child: Icon(Icons.add),
+                        child: const Icon(Icons.add),
                       ),
                     ],
                   ),
                 ),
               ),
             ),
-            
             Builder(
               builder: (context) {
                 return ValueListenableBuilder(
@@ -526,7 +514,8 @@ List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {
         final String currentDescription = todolist[index].description;
         _taskController.text = currentTaskName;
         _discriptController.text = currentDescription;
-        _dateController.text = DateFormat('MM/dd/yyyy').format(todolist[index].date);
+        _dateController.text =
+            DateFormat('MM/dd/yyyy').format(todolist[index].date);
 
         return Form(
           key: _formKey,

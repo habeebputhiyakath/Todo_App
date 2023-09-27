@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todolist/login_page.dart';
 
 import 'package:todolist/screens/chart.dart';
 
@@ -17,7 +19,31 @@ class BottomNavigation extends StatefulWidget {
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkLoggedInUser();
+  }
   int selectIndex = 0;
+  static const String SAVE_KEY_NAME = "User_name";
+
+    checkLoggedInUser() async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final username = sharedPreferences.getString(SAVE_KEY_NAME);
+
+    if (username != null && username.isNotEmpty) {
+      setState(() {
+        currentScreen = const HomePage();
+        selectIndex = 0;
+      });
+    } else {
+      setState(() {
+        currentScreen = const LoginPage();
+        selectIndex = -1; 
+      });
+    }
+  }
   
   static List widgetOptions = [
     const HomePage(),

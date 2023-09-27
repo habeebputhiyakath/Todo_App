@@ -20,7 +20,7 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
     return AnimatedContainer(
       curve: Curves.easeIn,
       duration: Duration(milliseconds: 300),
-      width: _isSearching ? 370.0 : 48,
+      width: _isSearching ? 290.0 : 48,
       height: 50.0,
       alignment: _isSearching ? Alignment.centerLeft : Alignment.centerRight,
       decoration: BoxDecoration(
