@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -57,8 +57,7 @@ class _HomePageState extends State<HomePage> {
             .where((task) =>
                 task.taskName.toLowerCase().contains(search.toLowerCase()))
             .toList();
-
-    final filteredByCriteria = filterTasksByCriteria(filteredBySearch);
+             final filteredByCriteria = filterTasksByCriteria(filteredBySearch);
 
     setState(() {
       filteredTasks = filteredByCriteria;
@@ -122,6 +121,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: themeManager.primaryColor,
+         automaticallyImplyLeading: false,
       ),
       endDrawer: draWer(),
       body: SafeArea(
@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 160,left: 15),
+                    padding: const EdgeInsets.only(bottom: 160, left: 15),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -164,7 +164,7 @@ class _HomePageState extends State<HomePage> {
                             ],
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color:const  Color.fromARGB(255, 185, 184, 184),
+                              color: const Color.fromARGB(255, 185, 184, 184),
                               width: 1.0,
                             ),
                           ),
@@ -176,19 +176,19 @@ class _HomePageState extends State<HomePage> {
                               child: CircleAvatar(
                                 radius: 25,
                                 backgroundColor:
-                                   const Color.fromARGB(255, 174, 198, 221),
+                                    const Color.fromARGB(255, 174, 198, 221),
                                 child: imageWidget,
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10,),
+                        const SizedBox(
+                          width: 10,
+                        ),
                         AnimatedSearchBar(
                           onSearch: filterTasks,
                         ),
-                        
                       ],
-                    
                     ),
                   ),
                 ),

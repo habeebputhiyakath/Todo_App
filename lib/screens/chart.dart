@@ -38,29 +38,32 @@ class _ChartState extends State<Chart> {
                 int incompletedTasks =
                     snapshot.data!.where((task) => !task.tasComplete).length;
                  return Center(
-                   child: Container(
-                   width: 350, 
-                   height: 350,
-                   child: PieChart(
-                     PieChartData(
-                       sections: [
-                         PieChartSectionData(
-                           value: completedTasks.toDouble(),
-                           color: Color.fromARGB(255, 14, 2, 121),
-                           
-                         ),
-                         PieChartSectionData(
-                           value: incompletedTasks.toDouble(),
-                           color: const Color.fromARGB(255, 54, 206, 244),
-                         ),
-                       ],
-                       sectionsSpace: 2,
-                       centerSpaceRadius: 90,
-                       startDegreeOffset: 90,
-                       
+                   child: Padding(
+                     padding: const EdgeInsets.only(top: 60),
+                     child: Container(
+                     width: 350, 
+                     height: 350,
+                     child: PieChart(
+                       PieChartData(
+                         sections: [
+                           PieChartSectionData(
+                             value: completedTasks.toDouble(),
+                             color: Color.fromARGB(255, 14, 2, 121),
+                             
+                           ),
+                           PieChartSectionData(
+                             value: incompletedTasks.toDouble(),
+                             color: const Color.fromARGB(255, 54, 206, 244),
+                           ),
+                         ],
+                         sectionsSpace: 2,
+                         centerSpaceRadius: 90,
+                         startDegreeOffset: 90,
+                         
+                       ),
                      ),
+                                ),
                    ),
-                              ),
                  );
               
               }

@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todolist/login_page.dart';
+import 'package:todolist/model/data_model.dart';
 import 'package:todolist/screens/widget_pages/drawer_pages/aboutpage.dart';
 import 'package:todolist/screens/widget_pages/drawer_pages/privacypage.dart';
 
@@ -7,9 +12,6 @@ import '../../theme/theme_manager.dart';
 
 class draWer extends StatefulWidget {
   draWer({Key? key}) : super(key: key);
-
-  get themeMode => null;
-
   @override
   State<draWer> createState() => _draWerState();
 }
@@ -74,28 +76,6 @@ class _draWerState extends State<draWer> {
             title: Row(
               children: [
                 Icon(
-                  Icons.manage_accounts,
-                  size: 20,
-                  color: Colors.grey,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  'Account Settings',
-                  style: TextStyle(
-                      color: const Color.fromARGB(255, 80, 79, 79),
-                      fontSize: 17),
-                ),
-              ],
-            ),
-            onTap: () {},
-          ),
-          Divider(),
-          ListTile(
-            title: Row(
-              children: [
-                Icon(
                   Icons.dark_mode_outlined,
                   size: 20,
                   color: Colors.grey,
@@ -149,6 +129,50 @@ class _draWerState extends State<draWer> {
             title: Row(
               children: [
                 Icon(
+                  Icons.restart_alt_outlined,
+                  size: 20,
+                  color: Colors.grey,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  'Reset',
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 80, 79, 79),
+                    fontSize: 17,
+                  ),
+                ),
+              ],
+            ),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Confirm Logout'),
+                    actions: <Widget>[
+                      TextButton(
+                          onPressed: () {
+                            resetApp(context);
+                          },
+                          child: Text('Logout')),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('cancel'))
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+          Divider(),
+          ListTile(
+            title: Row(
+              children: [
+                Icon(
                   Icons.exit_to_app,
                   size: 20,
                   color: Colors.grey,
@@ -164,11 +188,39 @@ class _draWerState extends State<draWer> {
                 ),
               ],
             ),
-            onTap: () {},
+            onTap: () {
+              showDialog(
+                context: context,
+                builder:(BuildContext context) {
+                return AlertDialog(
+                  title: Text('Exit App..?'),
+                  actions: [
+                    TextButton(onPressed: (){
+                      SystemNavigator.pop();
+                    }, child: Text('Exit')),
+                    TextButton(onPressed: (){
+                      Navigator.of(context).pop();
+                    }, child: Text('cancel')),
+                  ],
+                );
+              }
+              );
+            },
           ),
           Divider(),
         ],
       ),
+    );
+  }
+
+  void resetApp(BuildContext context) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.clear();
+    final box = Hive.box<TaskModel>('task_db');
+    await box.clear();
+    await box.close();
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => LoginPage()),
     );
   }
 }

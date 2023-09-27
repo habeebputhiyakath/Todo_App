@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/bottom_bar.dart';
-import 'package:image_picker/image_picker.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key});
@@ -14,65 +11,80 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _nameController = TextEditingController();
-  File? file;
-
-  ImagePicker image = ImagePicker();
-  final _formKey = GlobalKey<FormState>();
   static const String SAVE_KEY_NAME = "User_name";
+  final _formKey = GlobalKey<FormState>();
+
+  void checkLoggedInUser() async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final storedUsername = sharedPreferences.getString(SAVE_KEY_NAME);
+
+    if (storedUsername != null && storedUsername.isNotEmpty) {
+      navigateToBottomNavigation();
+    }
+  }
+
+  @override
+  void initState() {
+    setState(() {
+      checkLoggedInUser();
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          Column(
-            children: [
-              Container(
-                width: double.infinity,
-                height: 370,
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 1, 59, 70),
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(200),
-                    bottomLeft: Radius.circular(200),
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 370,
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 1, 59, 70),
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(200),
+                      bottomLeft: Radius.circular(200),
+                    ),
                   ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 40,
-                      ),
-                      Text(
-                        "Let's Start",
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w600,
-                          foreground: Paint()
-                            ..shader = LinearGradient(
-                              colors: [Colors.orange, Colors.red, Colors.blue],
-                            ).createShader(Rect.fromLTWH(0, 0, 200, 70)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 40,
                         ),
-                      ),
-                      Text(
-                        "From Today",
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w600,
-                          foreground: Paint()
-                            ..shader = LinearGradient(
-                              colors: [const Color.fromARGB(255, 123, 255, 0), Color.fromARGB(255, 244, 225, 54), Color.fromARGB(255, 24, 187, 216)],
-                            ).createShader(Rect.fromLTWH(0, 0, 200, 70)),
+                        Text(
+                          "Let's Start",
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w100,
+                            foreground: Paint()
+                              ..shader = LinearGradient(
+                                colors: [Colors.orange, Color.fromARGB(255, 244, 177, 54), Color.fromARGB(255, 11, 136, 158)],
+                              ).createShader(Rect.fromLTWH(0, 0, 200, 70)),
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Form(
-                          key: _formKey,
+                        SizedBox(height: 10,),
+                        Text(
+                          "From Today",
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w100,
+                            foreground: Paint()
+                              ..shader = LinearGradient(
+                                colors: [Colors.orange, Color.fromARGB(255, 244, 177, 54), Color.fromARGB(255, 11, 136, 158)],
+                              ).createShader(Rect.fromLTWH(0, 0, 200, 70)),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                      
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
                             controller: _nameController,
                             decoration: InputDecoration(
@@ -85,34 +97,30 @@ class _LoginPageState extends State<LoginPage> {
                               filled: true,
                               hintText: 'Username',
                             ),
-                            validator: (value) {
-                              if(value==null||value.isEmpty){
-                                return 'Username is empty';
-                              }
-                            },
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 90,
-                      ),
-                    ],
+                        SizedBox(
+                          height: 90,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           Positioned(
             left: 167,
             top: 344,
             child: ClipOval(
               child: ElevatedButton(
+              
                 onPressed: () {
-                  if(_formKey.currentState!.validate()){
-                    return loginConform(context);
-                  }else{
-                    print('Data is Empty');
-                  }
+                if (_formKey.currentState!.validate()) {
+                loginConform(context);
+              } else {
+                print('Data is Empty');
+              }
                 },
                 child: Icon(Icons.keyboard_arrow_right),
                 style: ElevatedButton.styleFrom(
@@ -190,25 +198,25 @@ class _LoginPageState extends State<LoginPage> {
     ],
   ),
 );
-
+}
+    void loginConform(BuildContext ctx) async {
+    final name = _nameController.text;
+    if (name.isNotEmpty) {
+      final sharedPreferences = await SharedPreferences.getInstance();
+      await sharedPreferences.setString(SAVE_KEY_NAME, name);
+      navigateToBottomNavigation();
+    } else {
+      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+        margin: EdgeInsets.all(10),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+        content: Text("Username is empty"),
+      ));
+    }
   }
-  
-void loginConform(BuildContext ctx) async {
-  final name = _nameController.text;
-  if (name.isNotEmpty) {
-    final sharedPreferences = await SharedPreferences.getInstance();
-    await sharedPreferences.setString(SAVE_KEY_NAME, name); 
-    Navigator.of(ctx).pushReplacement(
+    void navigateToBottomNavigation() {
+    Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => BottomNavigation()),
     );
-  } else {
-    ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-      margin: EdgeInsets.all(10),
-      backgroundColor: Colors.red,
-      behavior: SnackBarBehavior.floating,
-      content: Text("Username is empty"),
-    ));
   }
-}
-
 }

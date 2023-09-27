@@ -16,7 +16,6 @@ void main() async {
   await Hive.openBox('profile_picture_box');
   final taskDb = await Hive.openBox<TaskModel>('task_db');
   taskListNotifier.value = taskDb.values.toList();
-
   final themeManager = ThemeManager();
   await themeManager.initializeTheme();
 
