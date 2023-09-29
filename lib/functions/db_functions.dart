@@ -41,4 +41,10 @@ Future<void> updateTask(int index, TaskModel updatedTask) async {
     final profilePictureBox = Hive.box('profile_picture_box');
     await profilePictureBox.put('profile_image', imageBytes);
 }
+void deleteStoredImage() async {
+  final profilePictureBox = Hive.box('profile_picture_box');
+  if (profilePictureBox.containsKey('profile_image')) {
+    await profilePictureBox.delete('profile_image');
+  }
+}
 

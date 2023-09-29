@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:todolist/functions/db_functions.dart';
 import 'package:todolist/login_page.dart';
 import 'package:todolist/model/data_model.dart';
-import 'bottom_bar.dart';
+import 'package:todolist/splash.dart';
 import 'theme/theme_manager.dart';
 
 void main() async {
@@ -27,13 +27,13 @@ void main() async {
   );
 }
 
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: LoginPage(),

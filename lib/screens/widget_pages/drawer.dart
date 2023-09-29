@@ -190,21 +190,24 @@ class _draWerState extends State<draWer> {
             ),
             onTap: () {
               showDialog(
-                context: context,
-                builder:(BuildContext context) {
-                return AlertDialog(
-                  title: Text('Exit App..?'),
-                  actions: [
-                    TextButton(onPressed: (){
-                      SystemNavigator.pop();
-                    }, child: Text('Exit')),
-                    TextButton(onPressed: (){
-                      Navigator.of(context).pop();
-                    }, child: Text('cancel')),
-                  ],
-                );
-              }
-              );
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Exit App..?'),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              SystemNavigator.pop();
+                            },
+                            child: Text('Exit')),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('cancel')),
+                      ],
+                    );
+                  });
             },
           ),
           Divider(),
@@ -216,9 +219,9 @@ class _draWerState extends State<draWer> {
   void resetApp(BuildContext context) async {
     final sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.clear();
-    final box = Hive.box<TaskModel>('task_db');
-    await box.clear();
-    await box.close();
+    // final box = Hive.box('task_db');
+    // await box.clear();
+    // await box.close();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => LoginPage()),
     );

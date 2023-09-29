@@ -57,14 +57,14 @@ class _HomePageState extends State<HomePage> {
             .where((task) =>
                 task.taskName.toLowerCase().contains(search.toLowerCase()))
             .toList();
-             final filteredByCriteria = filterTasksByCriteria(filteredBySearch);
+    final filteredByCriteria = filterTasksByCriteria(filteredBySearch);
 
     setState(() {
       filteredTasks = filteredByCriteria;
     });
   }
 
-  List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {
+  List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {      
     final now = DateTime.now();
     switch (selectedFilter) {
       case FilterCriteria.Daily:
@@ -109,8 +109,8 @@ class _HomePageState extends State<HomePage> {
         ? Image.memory(
             storedImageBytes,
             fit: BoxFit.cover,
-            width: 50,
-            height: 50,
+            width: 150,
+            height: 150,
           )
         : const Icon(
             Icons.party_mode_outlined,
@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: themeManager.primaryColor,
-         automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false,
       ),
       endDrawer: draWer(),
       body: SafeArea(
@@ -148,48 +148,52 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 160, left: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.40),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: const Color.fromARGB(255, 185, 184, 184),
-                              width: 1.0,
-                            ),
-                          ),
-                          child: GestureDetector(
-                            onTap: () {
-                              _addPhotoFunction(context);
-                            },
-                            child: ClipOval(
-                              child: CircleAvatar(
-                                radius: 25,
-                                backgroundColor:
-                                    const Color.fromARGB(255, 174, 198, 221),
-                                child: imageWidget,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        AnimatedSearchBar(
-                          onSearch: filterTasks,
-                        ),
-                      ],
+                    padding: const EdgeInsets.only(bottom: 160, left: 15,right: 15),
+                    child: AnimatedSearchBar(
+                      onSearch: filterTasks,
                     ),
+                  ),
+                ),
+                Positioned(
+                  top: 110,
+                  left: 15,
+                  child: Row(
+                    children: [
+                      Container(
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.40),
+                                      spreadRadius: 2,
+                                      blurRadius: 5,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: const Color.fromARGB(255, 185, 184, 184),
+                                    width: 1.0,
+                                  ),
+                                ),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _addPhotoFunction(context);
+                                    });
+                                  },
+                                  child: ClipOval(
+                                    child: CircleAvatar(
+                                      radius: 45,
+                                      backgroundColor:
+                                          const Color.fromARGB(255, 174, 198, 221),
+                                      child: imageWidget,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 20,),
+                              Text('Muhammed Ajmal',style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w100),)
+                    ],
                   ),
                 ),
               ],
@@ -315,6 +319,7 @@ class _HomePageState extends State<HomePage> {
                                                   title: Text(
                                                       'Are you sure you want to delete this task..?'),
                                                 );
+
                                                 _showEditDialogBox(index);
                                               },
                                               child: Icon(Icons.edit)),
@@ -627,13 +632,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  getCam(ImageSource source) async {
-    var img = await image.pickImage(source: source);
-    setState(() {
-      file = File(img!.path);
-    });
-  }
-
   void _addPhotoFunction(BuildContext context) async {
     showDialog(
       context: context,
@@ -691,6 +689,13 @@ class _HomePageState extends State<HomePage> {
                   height: 10,
                 ),
                 TextButton(
+                  onPressed: () {
+                    deleteStoredImage();
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Delete Image'),
+                ),
+                TextButton(
                   child: Text('Cancel'),
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -708,8 +713,8 @@ class _HomePageState extends State<HomePage> {
     showDatePicker(
       context: context,
       initialDate: _dateTime,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2040),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2060),
     ).then((value) {
       if (value != null) {
         setState(() {

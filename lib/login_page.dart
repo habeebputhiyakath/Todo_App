@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/bottom_bar.dart';
+import 'package:todolist/splash.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key});
@@ -33,6 +34,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           Form(
@@ -216,7 +218,7 @@ class _LoginPageState extends State<LoginPage> {
   }
     void navigateToBottomNavigation() {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => BottomNavigation()),
+      MaterialPageRoute(builder: (context) => SplashScreen()),
     );
   }
 }
