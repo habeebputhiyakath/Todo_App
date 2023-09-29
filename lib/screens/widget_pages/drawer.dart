@@ -219,9 +219,6 @@ class _draWerState extends State<draWer> {
   void resetApp(BuildContext context) async {
     final sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.clear();
-    // final box = Hive.box('task_db');
-    // await box.clear();
-    // await box.close();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => LoginPage()),
     );

@@ -14,7 +14,8 @@ import 'package:todolist/screens/widget_pages/search_bar.dart';
 import 'package:todolist/theme/theme_manager.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+ final String username;
+ const HomePage({Key? key, required this.username}): super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -44,7 +45,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    final taskDb = Hive.box<TaskModel>('task_db');
+    final taskDb =  Hive.box<TaskModel>('task_db');
     todolist = taskDb.values.toList();
     taskListNotifier.value = todolist;
     filteredTasks = todolist;
@@ -192,7 +193,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               SizedBox(width: 20,),
-                              Text('Muhammed Ajmal',style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w100),)
+                              Text('${widget.username}',style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w100),)
                     ],
                   ),
                 ),

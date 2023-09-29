@@ -9,7 +9,9 @@ import 'screens/home_page.dart';
 import 'screens/in_complete.dart';
 
 class BottomNavigation extends StatefulWidget {
-  BottomNavigation({super.key});
+  final String username;
+
+  BottomNavigation({Key? key, required this.username});
   
 
   @override
@@ -17,16 +19,24 @@ class BottomNavigation extends StatefulWidget {
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
-  int selectIndex = 0;
-  
-  static List widgetOptions = [
-    const HomePage(),
-    const Completed(),
-    const UnComplete(),
-    const Chart(),
-  ];
+int selectIndex = 0;
+
+  List<Widget> widgetOptions = [];
+  late Widget currentScreen; 
+
+  @override
+  void initState() {
+    super.initState();
+    widgetOptions = [
+      HomePage(username: widget.username),
+      Completed(),
+      UnComplete(),
+      Chart(),
+    ];
+    currentScreen = widgetOptions[selectIndex];
+  }
+
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = const HomePage();
   
   
   @override
@@ -49,7 +59,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               MaterialButton(
                 onPressed: () {
                   setState(() {
-                    currentScreen = const HomePage();
+                    currentScreen =  HomePage(username: widget.username);
                     selectIndex = 0;
                   });
                 },

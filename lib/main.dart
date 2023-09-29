@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:todolist/functions/db_functions.dart';
 import 'package:todolist/login_page.dart';
 import 'package:todolist/model/data_model.dart';
-import 'package:todolist/splash.dart';
 import 'theme/theme_manager.dart';
 
 void main() async {
@@ -14,6 +13,7 @@ void main() async {
     Hive.registerAdapter(TaskModelAdapter());
   }
   await Hive.openBox('profile_picture_box');
+  await Hive.openBox('user_data_box');
   final taskDb = await Hive.openBox<TaskModel>('task_db');
   taskListNotifier.value = taskDb.values.toList();
   final themeManager = ThemeManager();

@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
     final storedUsername = sharedPreferences.getString(SAVE_KEY_NAME);
 
     if (storedUsername != null && storedUsername.isNotEmpty) {
-      navigateToBottomNavigation();
+      navigateToBottomNavigation(context);
     }
   }
 
@@ -206,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
     if (name.isNotEmpty) {
       final sharedPreferences = await SharedPreferences.getInstance();
       await sharedPreferences.setString(SAVE_KEY_NAME, name);
-      navigateToBottomNavigation();
+      navigateToBottomNavigation(ctx);
     } else {
       ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
         margin: EdgeInsets.all(10),
@@ -216,9 +216,9 @@ class _LoginPageState extends State<LoginPage> {
       ));
     }
   }
-    void navigateToBottomNavigation() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => SplashScreen()),
-    );
+    void navigateToBottomNavigation(BuildContext ctx) {
+      Navigator.of(ctx).push(
+    MaterialPageRoute(builder: (context) => BottomNavigation(username:_nameController.text)),
+  );
   }
 }
