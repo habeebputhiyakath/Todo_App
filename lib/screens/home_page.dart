@@ -14,8 +14,8 @@ import 'package:todolist/screens/widget_pages/search_bar.dart';
 import 'package:todolist/theme/theme_manager.dart';
 
 class HomePage extends StatefulWidget {
- final String username;
- const HomePage({Key? key, required this.username}): super(key: key);
+  final String username;
+  const HomePage({Key? key, required this.username}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -45,9 +45,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    final taskDb =  Hive.box<TaskModel>('task_db');
+    final taskDb = Hive.box<TaskModel>('task_db');
     todolist = taskDb.values.toList();
-    taskListNotifier.value = todolist;
+    setState(() {
+      taskListNotifier.value = todolist;
+    });
     filteredTasks = todolist;
   }
 
@@ -65,7 +67,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {      
+  List<TaskModel> filterTasksByCriteria(List<TaskModel> tasks) {
     final now = DateTime.now();
     switch (selectedFilter) {
       case FilterCriteria.Daily:
@@ -149,7 +151,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 160, left: 15,right: 15),
+                    padding:
+                        const EdgeInsets.only(bottom: 160, left: 15, right: 15),
                     child: AnimatedSearchBar(
                       onSearch: filterTasks,
                     ),
@@ -161,39 +164,47 @@ class _HomePageState extends State<HomePage> {
                   child: Row(
                     children: [
                       Container(
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.40),
-                                      spreadRadius: 2,
-                                      blurRadius: 5,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ],
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: const Color.fromARGB(255, 185, 184, 184),
-                                    width: 1.0,
-                                  ),
-                                ),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _addPhotoFunction(context);
-                                    });
-                                  },
-                                  child: ClipOval(
-                                    child: CircleAvatar(
-                                      radius: 45,
-                                      backgroundColor:
-                                          const Color.fromARGB(255, 174, 198, 221),
-                                      child: imageWidget,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 20,),
-                              Text('${widget.username}',style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w100),)
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.40),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: const Color.fromARGB(255, 185, 184, 184),
+                            width: 1.0,
+                          ),
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _addPhotoFunction(context);
+                            });
+                          },
+                          child: ClipOval(
+                            child: CircleAvatar(
+                              radius: 45,
+                              backgroundColor:
+                                  const Color.fromARGB(255, 174, 198, 221),
+                              child: imageWidget,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        '${widget.username}',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w100),
+                      )
                     ],
                   ),
                 ),
@@ -440,9 +451,8 @@ class _HomePageState extends State<HomePage> {
                   child: Text('Add'),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      setState(() {
-                        saveTask();
-                      });
+                      saveTask();
+
                       Navigator.of(context).pop();
                     }
                     print('Data is Empty');
@@ -501,7 +511,6 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 setState(() {
                   deleteTask(index);
-                  todolist.removeAt(index);
                   Navigator.of(context).pop();
                 });
               },
